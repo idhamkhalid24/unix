@@ -5,86 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TOKO UNIX</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             /* Mode Terang */
-            --bg-body: #f4f7f6;
-            --color-text: #333;
-            --bg-sidebar: #2c3e50;
-            --color-sidebar-text: white;
-            --bg-sidebar-link: #34495e;
-            --bg-sidebar-link-hover: #4a6580;
-            --bg-sidebar-link-active: #007bff;
-            --bg-page: #fff;
-            --color-heading: #2c3e50;
-            --border-color: #eee;
-            --table-header-bg: #e9ecef;
-            --table-header-color: #555;
-            --table-row-even-bg: #f9f9f9;
-            --summary-bg: #eaf3f0;
-            --summary-border: #d4e0da;
-            --gross-income-color: #ffc107;
-            --profit-color: #28a745;
-            --expense-color: #dc3545;
-            --button-primary-bg: #28a745;
-            --button-primary-hover: #218838;
-            --button-secondary-bg: #6c757d;
-            --button-secondary-hover: #5a6268;
-            --button-info-bg: #007bff;
-            --button-info-hover: #0056b3;
-            --button-danger-bg: #dc3545;
-            --button-danger-hover: #c82333;
-            --button-copy-bg: #17a2b8;
-            --button-copy-hover: #138496;
-            --input-border: #ccc;
-            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --bg-body: #f8fafc;
+            --color-text: #334155;
+            --bg-sidebar: #1e293b;
+            --color-sidebar-text: #f8fafc;
+            --bg-sidebar-link: #334155;
+            --bg-sidebar-link-hover: #475569;
+            --bg-sidebar-link-active: #3b82f6;
+            --bg-page: #ffffff;
+            --color-heading: #1e293b;
+            --border-color: #e2e8f0;
+            --table-header-bg: #f1f5f9;
+            --table-header-color: #64748b;
+            --table-row-even-bg: #f8fafc;
+            --summary-bg: #f0fdf4;
+            --summary-border: #dcfce7;
+            --gross-income-color: #f59e0b;
+            --profit-color: #10b981;
+            --expense-color: #ef4444;
+            --button-primary-bg: #10b981;
+            --button-primary-hover: #059669;
+            --button-secondary-bg: #64748b;
+            --button-secondary-hover: #475569;
+            --button-info-bg: #3b82f6;
+            --button-info-hover: #2563eb;
+            --button-danger-bg: #ef4444;
+            --button-danger-hover: #dc2626;
+            --button-copy-bg: #06b6d4;
+            --button-copy-hover: #0891b2;
+            --input-border: #cbd5e1;
+            --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --sidebar-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            --card-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* Mode Gelap */
         body.dark-mode {
-            --bg-body: #1a1a2e;
-            --color-text: #e0e0e0;
-            --bg-sidebar: #16213e;
-            --color-sidebar-text: #e0e0e0;
-            --bg-sidebar-link: #0f3460;
-            --bg-sidebar-link-hover: #1b4d8a;
-            --bg-sidebar-link-active: #007bff;
-            --bg-page: #202e4d;
-            --color-heading: #e0e0e0;
-            --border-color: #3d3d5c;
-            --table-header-bg: #2b3a5c;
-            --table-header-color: #e0e0e0;
-            --table-row-even-bg: #25314a;
-            --summary-bg: #2a3d60;
-            --summary-border: #3c527e;
-            --gross-income-color: #ffc107;
-            --profit-color: #4CAF50; /* Hijau lebih terang untuk gelap */
-            --expense-color: #FF6347; /* Merah lebih terang untuk gelap */
-            --button-primary-bg: #4CAF50;
-            --button-primary-hover: #45a049;
-            --button-secondary-bg: #5a6268;
-            --button-secondary-hover: #4e565c;
-            --button-info-bg: #3498db;
-            --button-info-hover: #217dbb;
-            --button-danger-bg: #e74c3c;
-            --button-danger-hover: #c0392b;
-            --button-copy-bg: #3498db;
-            --button-copy-hover: #217dbb;
-            --input-border: #555;
-            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            --bg-body: #0f172a;
+            --color-text: #e2e8f0;
+            --bg-sidebar: #020617;
+            --color-sidebar-text: #e2e8f0;
+            --bg-sidebar-link: #1e293b;
+            --bg-sidebar-link-hover: #334155;
+            --bg-sidebar-link-active: #3b82f6;
+            --bg-page: #1e293b;
+            --color-heading: #e2e8f0;
+            --border-color: #334155;
+            --table-header-bg: #1e293b;
+            --table-header-color: #e2e8f0;
+            --table-row-even-bg: #0f172a;
+            --summary-bg: #1e293b;
+            --summary-border: #334155;
+            --gross-income-color: #f59e0b;
+            --profit-color: #10b981;
+            --expense-color: #ef4444;
+            --button-primary-bg: #10b981;
+            --button-primary-hover: #059669;
+            --button-secondary-bg: #64748b;
+            --button-secondary-hover: #475569;
+            --button-info-bg: #3b82f6;
+            --button-info-hover: #2563eb;
+            --button-danger-bg: #ef4444;
+            --button-danger-hover: #dc2626;
+            --button-copy-bg: #06b6d4;
+            --button-copy-hover: #0891b2;
+            --input-border: #475569;
+            --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
             --sidebar-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             background-color: var(--bg-body);
             color: var(--color-text);
             display: flex;
             min-height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            overflow: hidden; /* Prevent scroll on main body when login is active */
+            transition: var(--transition);
+            overflow: hidden;
         }
 
         /* Login Overlay Styles */
@@ -94,318 +97,361 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.8);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            backdrop-filter: blur(5px);
         }
 
         .login-box {
             background-color: var(--bg-page);
-            padding: 40px;
-            border-radius: 12px;
+            padding: 2.5rem;
+            border-radius: var(--card-radius);
             box-shadow: var(--box-shadow);
             text-align: center;
-            transition: background-color 0.3s ease;
+            transition: var(--transition);
+            width: 90%;
+            max-width: 400px;
         }
 
         .login-box h2 {
-            margin-bottom: 25px;
+            margin-bottom: 1.5rem;
             color: var(--color-heading);
-            font-size: 2em;
+            font-size: 1.75rem;
+            font-weight: 600;
         }
 
         .login-box input {
-            width: calc(100% - 22px);
-            padding: 12px;
-            margin-bottom: 20px;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.25rem;
             border: 1px solid var(--input-border);
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 1rem;
             background-color: var(--bg-page);
             color: var(--color-text);
-            transition: border-color 0.3s ease, background-color 0.3s ease;
+            transition: var(--transition);
+            box-sizing: border-box;
+        }
+
+        .login-box input:focus {
+            outline: none;
+            border-color: var(--button-info-bg);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
         }
 
         .login-box button {
             background-color: var(--button-info-bg);
             color: white;
-            padding: 14px 25px;
+            padding: 0.75rem 1.5rem;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 17px;
+            font-size: 1rem;
             width: 100%;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            transition: var(--transition);
             font-weight: 600;
+            margin-top: 0.5rem;
         }
 
         .login-box button:hover {
             background-color: var(--button-info-hover);
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--box-shadow);
         }
 
         .sidebar {
-            width: 240px; /* Lebar sidebar sedikit lebih besar */
+            width: 280px;
             background-color: var(--bg-sidebar);
             color: var(--color-sidebar-text);
-            padding: 20px;
+            padding: 1.5rem;
             box-shadow: var(--sidebar-shadow);
             display: flex;
             flex-direction: column;
             border-right: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
         }
+
         .sidebar h2 {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 2rem;
             color: var(--color-sidebar-text);
-            font-size: 1.8em;
-            letter-spacing: 1px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
+
         .sidebar nav ul {
             list-style: none;
             padding: 0;
-            flex-grow: 1; /* Agar daftar menu mengisi ruang */
+            flex-grow: 1;
         }
+
         .sidebar nav ul li {
-            margin-bottom: 12px; /* Jarak antar menu */
+            margin-bottom: 0.75rem;
         }
+
         .sidebar nav ul li a {
-            display: flex; /* Untuk ikon jika nanti ada */
+            display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 14px 18px; /* Padding lebih besar */
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
             background-color: var(--bg-sidebar-link);
             color: var(--color-sidebar-text);
             text-decoration: none;
-            border-radius: 8px; /* Sudut lebih membulat */
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            font-size: 1.05em;
+            border-radius: 8px;
+            transition: var(--transition);
+            font-size: 0.95rem;
             font-weight: 500;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            background-image: linear-gradient(to right, var(--bg-sidebar-link), darken(var(--bg-sidebar-link), 5%)); /* Gradien */
         }
+
         .sidebar nav ul li a:hover {
             background-color: var(--bg-sidebar-link-hover);
-            transform: translateX(5px) scale(1.02); /* Sedikit membesar */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            background-image: linear-gradient(to right, var(--bg-sidebar-link-hover), darken(var(--bg-sidebar-link-hover), 5%));
+            transform: translateX(5px);
+            box-shadow: var(--box-shadow);
         }
+
         .sidebar nav ul li a.active {
             background-color: var(--bg-sidebar-link-active);
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* Shadow khusus untuk aktif */
-            transform: scale(1.01);
-            background-image: linear-gradient(to right, var(--bg-sidebar-link-active), darken(var(--bg-sidebar-link-active), 5%));
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
         }
-        /* Mengatur display none secara tegas */
+
         .hidden-menu {
             display: none !important;
         }
 
-        /* Gaya baru untuk ringkasan harian di sidebar */
         .daily-summary-section {
-            margin-top: auto; /* Dorong ke bawah */
-            padding-top: 20px;
+            margin-top: auto;
+            padding-top: 1.5rem;
             border-top: 1px solid rgba(255, 255, 255, 0.15);
-            margin-top: 30px;
         }
+
         .daily-summary-section h3 {
             color: var(--color-sidebar-text);
-            margin-bottom: 15px;
-            font-size: 1.15em;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
             text-align: center;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            font-weight: 500;
         }
+
         .daily-summary-section p {
             color: var(--color-sidebar-text);
-            font-size: 0.95em;
-            margin-bottom: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 5px 0;
-            border-bottom: 1px dashed rgba(255, 255, 255, 0.08); /* Garis putus-putus */
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
         }
+
         .daily-summary-section p:last-child {
             border-bottom: none;
         }
+
         .daily-summary-section p strong {
-            font-size: 1em;
-            margin-left: 10px;
+            font-size: 0.95rem;
+            margin-left: 0.5rem;
             text-align: right;
             flex-shrink: 0;
-            font-weight: bold;
+            font-weight: 600;
         }
+
         .daily-summary-section p.gross-income strong {
-            color: var(--gross-income-color); 
+            color: var(--gross-income-color);
         }
+
         .daily-summary-section p.profit strong {
-            color: var(--profit-color); 
+            color: var(--profit-color);
         }
+
         .daily-summary-section p.expense strong {
-            color: var(--expense-color); 
+            color: var(--expense-color);
         }
 
         .main-content {
             flex-grow: 1;
-            padding: 30px;
+            padding: 2rem;
             overflow-y: auto;
+            transition: var(--transition);
         }
+
         .page {
             display: none;
             background-color: var(--bg-page);
-            padding: 30px;
-            border-radius: 12px; /* Lebih membulat */
+            padding: 2rem;
+            border-radius: var(--card-radius);
             box-shadow: var(--box-shadow);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            transition: var(--transition);
         }
+
         .page.active {
             display: block;
+            animation: fadeIn 0.3s ease;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         h1, h2 {
             color: var(--color-heading);
             text-align: center;
-            margin-bottom: 25px;
-            font-size: 2.2em;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+            font-weight: 600;
         }
+
         .form-group {
-            margin-bottom: 18px; /* Jarak antar grup form */
+            margin-bottom: 1.25rem;
         }
+
         .form-group label {
             display: block;
-            margin-bottom: 8px; /* Jarak label ke input */
-            font-weight: 600; /* Sedikit lebih tebal */
+            margin-bottom: 0.5rem;
+            font-weight: 500;
             color: var(--color-text);
-            font-size: 0.95em;
+            font-size: 0.95rem;
         }
+
         .form-group input[type="date"],
         .form-group input[type="text"],
         .form-group input[type="number"],
         .form-group select,
         .form-group textarea {
-            width: calc(100% - 22px);
-            padding: 12px; /* Padding lebih besar */
+            width: 100%;
+            padding: 0.75rem 1rem;
             border: 1px solid var(--input-border);
-            border-radius: 8px; /* Sudut lebih membulat */
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 1rem;
             box-sizing: border-box;
-            background-color: var(--bg-page); /* Input mengikuti warna halaman */
+            background-color: var(--bg-page);
             color: var(--color-text);
-            transition: border-color 0.3s ease, background-color 0.3s ease;
+            transition: var(--transition);
         }
-        .form-group input:focus, .form-group textarea:focus {
+
+        .form-group input:focus,
+        .form-group textarea:focus {
             outline: none;
-            border-color: var(--button-info-bg); /* Highlight saat fokus */
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+            border-color: var(--button-info-bg);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
         }
-        .form-group input[type="number"] {
-            text-transform: none;
-        }
+
         .form-group button {
             background-color: var(--button-primary-bg);
             color: white;
-            padding: 14px 25px; /* Padding lebih besar */
+            padding: 0.75rem 1.5rem;
             border: none;
-            border-radius: 8px; /* Sudut lebih membulat */
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 17px;
+            font-size: 1rem;
             width: 100%;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            margin-top: 15px;
-            font-weight: 600;
+            transition: var(--transition);
+            margin-top: 1rem;
+            font-weight: 500;
         }
+
         .form-group button:hover {
             background-color: var(--button-primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--box-shadow);
         }
 
         hr {
             border: none;
             border-top: 1px solid var(--border-color);
-            margin: 35px 0;
-            transition: border-color 0.3s ease;
+            margin: 2rem 0;
+            transition: var(--transition);
         }
 
         .results, .transactions-list {
-            margin-top: 30px;
+            margin-top: 2rem;
             border-top: 1px solid var(--border-color);
-            padding-top: 20px;
-            transition: border-color 0.3s ease;
+            padding-top: 1.5rem;
+            transition: var(--transition);
         }
+
         .results p {
-            font-size: 1.1em;
-            margin-bottom: 10px;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
         }
+
         .results p strong {
             color: var(--button-info-bg);
         }
+
         .transactions-list table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
-            overflow: hidden; /* Penting untuk border-radius tabel */
+            margin-top: 1rem;
+            box-shadow: var(--box-shadow);
+            border-radius: var(--card-radius);
+            overflow: hidden;
         }
+
         .transactions-list th, .transactions-list td {
             border: 1px solid var(--border-color);
-            padding: 12px;
+            padding: 0.75rem 1rem;
             text-align: left;
-            transition: border-color 0.3s ease;
+            transition: var(--transition);
         }
+
         .transactions-list th {
             background-color: var(--table-header-bg);
-            font-weight: bold;
+            font-weight: 600;
             color: var(--table-header-color);
             text-transform: uppercase;
-            font-size: 0.9em;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            font-size: 0.85rem;
         }
+
         .transactions-list tr:nth-child(even) {
             background-color: var(--table-row-even-bg);
-            transition: background-color 0.3s ease;
         }
+
         .transactions-list tr:hover {
-            background-color: rgba(0, 123, 255, 0.05); /* Highlight baris saat hover */
+            background-color: rgba(59, 130, 246, 0.05);
         }
 
         .search-controls, .price-search-controls {
             display: flex;
-            gap: 15px; /* Jarak lebih besar */
-            margin-top: 20px;
+            gap: 1rem;
+            margin-top: 1.5rem;
             flex-wrap: wrap;
-            justify-content: flex-start; /* Rata kiri */
-            padding-bottom: 10px; /* Padding di bawah search controls */
+            justify-content: flex-start;
+            padding-bottom: 1rem;
         }
+
         .search-controls input, .price-search-controls input {
             flex-grow: 1;
             min-width: 150px;
-            max-width: 250px; /* Batasi lebar input */
+            max-width: 250px;
         }
+
         .search-controls button, .price-search-controls button {
             width: auto;
-            flex-grow: 0; /* Jangan biarkan tombol terlalu besar */
-            padding: 10px 18px;
-            font-size: 0.95em;
-            margin-top: 0; /* Reset margin */
+            flex-grow: 0;
+            padding: 0.5rem 1rem;
+            font-size: 0.95rem;
+            margin-top: 0;
             border-radius: 6px;
         }
+
         .search-controls button:first-of-type {
             background-color: var(--button-info-bg);
         }
+
         .search-controls button:first-of-type:hover {
             background-color: var(--button-info-hover);
         }
+
         .search-controls button:last-of-type {
             background-color: var(--button-secondary-bg);
         }
+
         .search-controls button:last-of-type:hover {
             background-color: var(--button-secondary-hover);
         }
@@ -414,28 +460,31 @@
             background-color: var(--button-danger-bg);
             color: white;
             border: none;
-            padding: 8px 12px; /* Padding sedikit lebih besar */
+            padding: 0.5rem 0.75rem;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 0.85em;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            margin: 3px;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            margin: 0.25rem;
         }
+
         .delete-btn:hover {
             background-color: var(--button-danger-hover);
             transform: translateY(-1px);
         }
+
         .copy-btn {
             background-color: var(--button-copy-bg);
             color: white;
             border: none;
-            padding: 8px 12px;
+            padding: 0.5rem 0.75rem;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 0.85em;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            margin: 3px;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            margin: 0.25rem;
         }
+
         .copy-btn:hover {
             background-color: var(--button-copy-hover);
             transform: translateY(-1px);
@@ -443,99 +492,123 @@
 
         /* Styles for Harga Jual Page */
         .price-calc-input {
-            margin-bottom: 18px;
+            margin-bottom: 1.25rem;
             display: flex;
             align-items: center;
-            gap: 15px; /* Jarak antar label dan input */
+            gap: 1rem;
         }
+
         .price-calc-input label {
             flex: 1;
-            margin-right: 0; /* Reset margin */
-            text-align: right; /* Rata kanan label */
+            text-align: right;
         }
+
         .price-calc-input input {
             flex: 2;
         }
+
         #sellingPriceResult {
-            font-size: 1.4em;
-            font-weight: bold;
+            font-size: 1.4rem;
+            font-weight: 600;
             color: var(--profit-color);
             text-align: center;
-            margin-top: 25px;
-            padding: 10px;
+            margin-top: 1.5rem;
+            padding: 1rem;
             background-color: var(--summary-bg);
-            border-radius: 8px;
+            border-radius: var(--card-radius);
             border: 1px solid var(--summary-border);
         }
-        
-        /* Warna untuk keuntungan bersih */
+
         .profit-green {
             color: var(--profit-color);
-            font-weight: bold;
+            font-weight: 600;
         }
+
         .profit-red {
             color: var(--expense-color);
-            font-weight: bold;
+            font-weight: 600;
         }
+
         .price-search-controls {
-            justify-content: flex-end; /* Rata kanan tombol cari */
+            justify-content: flex-end;
         }
 
-
-        .profit-summary-section, .expense-summary-section, .financial-summary-section, .gross-income-summary-section { 
-            margin-top: 25px;
-            padding: 20px; /* Padding lebih besar */
+        .profit-summary-section,
+        .expense-summary-section,
+        .financial-summary-section,
+        .gross-income-summary-section,
+        .gross-income-filter-section {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
             background-color: var(--summary-bg);
-            border-radius: 10px;
+            border-radius: var(--card-radius);
             border: 1px solid var(--summary-border);
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
         }
 
-        .profit-summary-section h3, .expense-summary-section h3, .financial-summary-section h3, .gross-income-summary-section h3 {
-            font-size: 1.4em;
-            margin-bottom: 15px;
+        .profit-summary-section h3,
+        .expense-summary-section h3,
+        .financial-summary-section h3,
+        .gross-income-summary-section h3,
+        .gross-income-filter-section h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
             color: var(--color-heading);
+            font-weight: 600;
         }
 
-        .profit-summary-section p, .expense-summary-section p, .financial-summary-section p, .gross-income-summary-section p { 
-            margin: 10px 0;
-            font-size: 1.1em;
+        .profit-summary-section p,
+        .expense-summary-section p,
+        .financial-summary-section p,
+        .gross-income-summary-section p,
+        .gross-income-filter-section p {
+            margin: 0.75rem 0;
+            font-size: 1.1rem;
             color: var(--color-text);
         }
 
+        .profit-summary-section p strong,
+        .expense-summary-section p strong,
+        .financial-summary-section p strong,
+        .gross-income-summary-section p strong,
+        .gross-income-filter-section p strong {
+            font-size: 1.25rem;
+        }
+
         .profit-summary-section p strong {
-            color: var(--profit-color); 
-            font-size: 1.25em;
+            color: var(--profit-color);
         }
+
         .expense-summary-section p strong {
-            color: var(--expense-color); 
-            font-size: 1.25em;
+            color: var(--expense-color);
         }
-        .financial-summary-section p strong { 
-            color: var(--button-info-bg); 
-            font-size: 1.4em;
+
+        .financial-summary-section p strong {
+            color: var(--button-info-bg);
         }
-        .gross-income-summary-section p strong { 
-            color: var(--gross-income-color); 
-            font-size: 1.25em;
+
+        .gross-income-summary-section p strong,
+        .gross-income-filter-section p strong {
+            color: var(--gross-income-color);
         }
 
         /* Gaya untuk grafik */
         .chart-container {
-            margin-top: 30px;
-            padding: 25px; /* Padding lebih besar */
+            margin-top: 2rem;
+            padding: 1.5rem;
             background-color: var(--bg-page);
-            border-radius: 12px;
+            border-radius: var(--card-radius);
             box-shadow: var(--box-shadow);
             position: relative;
-            height: 450px; /* Tinggi default untuk grafik */
+            height: 450px;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            transition: var(--transition);
         }
+
         .chart-container canvas {
             max-width: 100%;
             max-height: 100%;
@@ -546,39 +619,44 @@
             background: none;
             border: none;
             color: var(--color-sidebar-text);
-            padding: 10px 15px;
+            padding: 0.75rem 1rem;
             cursor: pointer;
-            font-size: 1em;
-            margin-top: 10px;
+            font-size: 1rem;
+            margin-top: 0.5rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 15px;
+            padding-top: 1rem;
             text-align: center;
-            transition: color 0.3s ease;
+            transition: var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 0.5rem;
             font-weight: 500;
+            width: 100%;
         }
+
         .theme-toggle-button:hover, .shortcut-button:hover {
             color: var(--button-info-bg);
         }
-        /* Ikon sederhana untuk mode terang/gelap */
+
         .theme-toggle-button::before {
-            content: '☀️'; /* Simbol matahari untuk terang */
-            font-size: 1.2em;
+            content: '☀️';
+            font-size: 1.2rem;
         }
+
         body.dark-mode .theme-toggle-button::before {
-            content: '🌙'; /* Simbol bulan untuk gelap */
+            content: '🌙';
         }
+
         .shortcut-button {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: none; /* Only the first one has a border-top */
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+            border-top: none;
         }
+
         .shortcut-button:first-of-type {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 15px;
+            padding-top: 1rem;
         }
 
         /* Responsive Design */
@@ -586,80 +664,125 @@
             body {
                 flex-direction: column;
             }
+
             .sidebar {
                 width: 100%;
-                padding: 15px;
+                padding: 1rem;
                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             }
+
             .sidebar h2 {
-                margin-bottom: 15px;
+                margin-bottom: 1rem;
             }
+
             .sidebar nav ul {
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: center;
-                gap: 10px;
+                gap: 0.5rem;
             }
+
             .sidebar nav ul li {
                 margin-bottom: 0;
             }
+
             .sidebar nav ul li a {
-                padding: 10px 12px;
-                font-size: 0.9em;
+                padding: 0.5rem 0.75rem;
+                font-size: 0.9rem;
             }
+
             .daily-summary-section {
-                text-align: left; 
-                margin-top: 15px;
-                padding: 10px;
+                text-align: left;
+                margin-top: 1rem;
+                padding: 1rem;
             }
+
             .daily-summary-section p {
-                font-size: 0.8em;
-                margin-bottom: 5px;
+                font-size: 0.85rem;
+                margin-bottom: 0.5rem;
             }
+
             .daily-summary-section p strong {
-                font-size: 0.9em;
+                font-size: 0.9rem;
             }
 
             .main-content {
-                padding: 20px;
+                padding: 1.5rem;
             }
+
             .page {
-                padding: 20px;
+                padding: 1.5rem;
             }
+
             .search-controls, .price-search-controls {
                 flex-direction: column;
-                gap: 10px;
-                align-items: stretch; /* Agar item mengisi lebar */
+                gap: 0.75rem;
+                align-items: stretch;
             }
+
             .search-controls input, .price-search-controls input {
                 max-width: 100%;
                 min-width: unset;
             }
+
             .search-controls button, .price-search-controls button {
                 width: 100%;
             }
+
             .price-calc-input {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 5px;
+                gap: 0.5rem;
             }
+
             .price-calc-input label {
-                margin-bottom: 5px;
+                margin-bottom: 0.5rem;
                 text-align: left;
             }
+
             .chart-container {
                 height: 300px;
-                padding: 15px;
+                padding: 1rem;
             }
+
             .form-group button {
-                padding: 12px 20px;
-                font-size: 16px;
+                padding: 0.75rem 1.25rem;
+                font-size: 1rem;
             }
+
             .theme-toggle-button, .shortcut-button {
-                margin-top: 15px;
-                padding-top: 15px;
+                margin-top: 1rem;
+                padding-top: 1rem;
                 border-top: 1px solid rgba(255, 255, 255, 0.1);
             }
+        }
+
+        /* Tabs untuk pendapatan kotor */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .tab.active {
+            border-bottom-color: var(--button-info-bg);
+            color: var(--button-info-bg);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
     </style>
 </head>
@@ -683,12 +806,13 @@
             </ul>
         </nav>
 
-        <div class="daily-summary-section sidebar-admin-feature">
-            <h3>Ringkasan Harian Cepat</h3>
-            <p>5. Pendapatan Kotor Hari Ini: <strong id="sidebarPendapatanKotorHariIni" class="gross-income">Rp 0</strong></p>
-            <p>6. Laba Dihitung Hari Ini: <strong id="sidebarLabaHariIni" class="profit">Rp 0</strong></p>
-            <p>7. Pengeluaran Hari Ini: <strong id="sidebarPengeluaranHariIni" class="expense">Rp 0</strong></p>
-        </div>
+<!-- RINGKASAN HARIAN - VERSI RAPAT -->
+<div class="daily-summary-section sidebar-admin-feature" style="margin-top: 0; padding: 10px 0 5px 0; border-top: none;">
+    <h3 style="margin: 0 0 8px 0; font-size: 15px;">Ringkasan Harian Cepat</h3>
+    <p style="margin: 4px 0;"><span class="gross-income">Pendapatan:</span> <strong id="sidebarPendapatanKotorHariIni">Rp 0</strong></p>
+    <p style="margin: 4px 0;"><span class="profit">Laba:</span> <strong id="sidebarLabaHariIni">Rp 0</strong></p>
+    <p style="margin: 4px 0;"><span class="expense">Pengeluaran:</span> <strong id="sidebarPengeluaranHariIni">Rp 0</strong></p>
+</div>
 
         <button class="theme-toggle-button sidebar-admin-feature" onclick="toggleTheme()">
             <span>Mode Terang/Gelap</span>
@@ -725,18 +849,41 @@
             </div>
 
             <hr>
-            <div class="gross-income-summary-section hidden-menu-admin">
-                <h3>Rincian Pendapatan Kotor</h3>
-                <p>Pendapatan Kotor Hari Ini: <strong id="pendapatanKotorHariIni">Rp 0</strong></p>
-                <p>Pendapatan Kotor Bulan Ini: <strong id="pendapatanKotorBulanIni">Rp 0</strong></p>
-                <p>Total Pendapatan Kotor Keseluruhan: <strong id="totalPendapatanKotorKeseluruhan">Rp 0</strong></p>
+
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('summary')">Ringkasan</div>
+                <div class="tab" onclick="switchTab('filter')">Filter Pendapatan</div>
             </div>
 
-            <div class="profit-summary-section hidden-menu-admin">
-                <h3>Rincian Laba Dihitung</h3>
-                <p>Laba Hari Ini: <strong id="labaHariIni">Rp 0</strong></p>
-                <p>Laba Bulan Ini: <strong id="labaBulanIni">Rp 0</strong></p>
-                <p>Total Laba Keseluruhan: <strong id="totalLabaKeseluruhan">Rp 0</strong></p>
+            <div id="summary-tab" class="tab-content active">
+                <div class="gross-income-summary-section hidden-menu-admin">
+                    <h3>Rincian Pendapatan Kotor</h3>
+                    <p>Pendapatan Kotor Hari Ini: <strong id="pendapatanKotorHariIni">Rp 0</strong></p>
+                    <p>Pendapatan Kotor Bulan Ini: <strong id="pendapatanKotorBulanIni">Rp 0</strong></p>
+                    <p>Total Pendapatan Kotor Keseluruhan: <strong id="totalPendapatanKotorKeseluruhan">Rp 0</strong></p>
+                </div>
+
+                <div class="profit-summary-section hidden-menu-admin">
+                    <h3>Rincian Laba Dihitung</h3>
+                    <p>Laba Hari Ini: <strong id="labaHariIni">Rp 0</strong></p>
+                    <p>Laba Bulan Ini: <strong id="labaBulanIni">Rp 0</strong></p>
+                    <p>Total Laba Keseluruhan: <strong id="totalLabaKeseluruhan">Rp 0</strong></p>
+                </div>
+            </div>
+
+            <div id="filter-tab" class="tab-content">
+                <div class="gross-income-filter-section hidden-menu-admin">
+                    <h3>Filter Pendapatan Kotor</h3>
+                    <div class="search-controls">
+                        <label for="grossIncomeStartDate">Dari Tanggal:</label>
+                        <input type="date" id="grossIncomeStartDate">
+                        <label for="grossIncomeEndDate">Sampai Tanggal:</label>
+                        <input type="date" id="grossIncomeEndDate">
+                        <button onclick="filterGrossIncome()" style="background-color: var(--button-info-bg);">Filter</button>
+                        <button onclick="resetGrossIncomeFilter()" style="background-color: var(--button-secondary-bg);">Reset</button>
+                    </div>
+                    <p>Total Pendapatan Kotor: <strong id="filteredGrossIncome">Rp 0</strong></p>
+                </div>
             </div>
 
             <div class="transactions-list">
@@ -759,7 +906,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        </tbody>
+                        <!-- Data akan diisi oleh JavaScript -->
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -817,7 +965,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        </tbody>
+                        <!-- Data akan diisi oleh JavaScript -->
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -866,14 +1015,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        </tbody>
+                        <!-- Data akan diisi oleh JavaScript -->
+                    </tbody>
                 </table>
             </div>
         </div>
 
         <div id="ringkasan-keuangan" class="page">
             <h2>Laporan Keuangan Keseluruhan</h2>
-            <div class="search-controls" style="margin-bottom: 20px;">
+            <div class="search-controls" style="margin-bottom: 1.5rem;">
                 <label for="summaryStartDate">Dari Tanggal:</label>
                 <input type="date" id="summaryStartDate">
                 <label for="summaryEndDate">Sampai Tanggal:</label>
@@ -893,7 +1043,6 @@
                 <canvas id="monthlyFinancialChart"></canvas>
             </div>
         </div>
-
     </div>
 
     <script>
@@ -929,27 +1078,24 @@
         // --- Fungsi Inisialisasi UI Berdasarkan Peran ---
         function initializeUIForRole() {
             // Sembunyikan semua menu admin dan fitur admin secara default
-            // 'hidden-menu-admin' untuk elemen yang hanya terlihat oleh admin
             document.querySelectorAll('.hidden-menu-admin').forEach(el => {
-                el.style.display = 'none !important'; // Pastikan disembunyikan
+                el.style.display = 'none';
             });
-            // 'sidebar-admin-feature' untuk elemen ringkasan harian dan tombol di sidebar
             document.querySelectorAll('.sidebar-admin-feature').forEach(el => {
-                el.style.display = 'none !important'; // Pastikan disembunyikan
+                el.style.display = 'none';
             });
            
             if (currentUserRole === 'admin') {
                 // Tampilkan semua menu dan elemen untuk admin
                 document.querySelectorAll('.hidden-menu-admin').forEach(el => {
-                    el.style.display = ''; // Reset display ke nilai default
+                    el.style.display = '';
                 });
                 document.querySelectorAll('.sidebar-admin-feature').forEach(el => {
-                    el.style.display = ''; // Reset display ke nilai default
+                    el.style.display = '';
                 });
                 showPage('pendapatan'); // Default page for admin
             } else if (currentUserRole === 'cashier') {
                 // Untuk kasir, hanya Pendapatan dan Pengeluaran yang terlihat
-                // Elemen dengan kelas 'hidden-menu-admin' dan 'sidebar-admin-feature' akan tetap tersembunyi
                 showPage('pendapatan'); // Default page for cashier
             }
         }
@@ -1018,6 +1164,25 @@
             }
         }
 
+        // --- Fungsi Tab Pendapatan Kotor ---
+        function switchTab(tabId) {
+            // Sembunyikan semua tab content
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Hapus kelas active dari semua tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Tampilkan tab yang dipilih
+            document.getElementById(tabId + '-tab').classList.add('active');
+            
+            // Tambahkan kelas active ke tab yang diklik
+            event.currentTarget.classList.add('active');
+        }
+
         // --- Navigasi Halaman ---
         function showPage(pageId) {
             // Sembunyikan semua halaman terlebih dahulu
@@ -1071,7 +1236,6 @@
         }
 
         // --- Fungsi Transaksi (Laba & Pengeluaran) ---
-
         function calculateProfitAndAddTransaction() {
             const dateInput = document.getElementById('pendapatanDate').value;
             const namaBarangInput = document.getElementById('namaBarangPendapatan').value.trim();
@@ -1317,6 +1481,40 @@
             displayTransactionsByType(targetTableType, filtered);
         }
 
+        // --- Fungsi Filter Pendapatan Kotor ---
+        function filterGrossIncome() {
+            const startDateStr = document.getElementById('grossIncomeStartDate').value;
+            const endDateStr = document.getElementById('grossIncomeEndDate').value;
+
+            if (!startDateStr || !endDateStr) {
+                alert('Silakan masukkan Tanggal Mulai dan Tanggal Akhir untuk filter pendapatan kotor.');
+                return;
+            }
+
+            const startDate = new Date(startDateStr);
+            const endDate = new Date(endDateStr);
+            endDate.setDate(endDate.getDate() + 1); // Tambah 1 hari agar mencakup seluruh hari akhir
+
+            let totalGrossIncome = 0;
+
+            transactions.forEach(t => {
+                if (t.type === 'omzet') {
+                    const transactionDate = new Date(t.date);
+                    if (transactionDate >= startDate && transactionDate < endDate) {
+                        totalGrossIncome += t.originalNominal;
+                    }
+                }
+            });
+
+            document.getElementById('filteredGrossIncome').textContent = formatCurrency(totalGrossIncome);
+        }
+
+        function resetGrossIncomeFilter() {
+            document.getElementById('grossIncomeStartDate').value = '';
+            document.getElementById('grossIncomeEndDate').value = '';
+            document.getElementById('filteredGrossIncome').textContent = formatCurrency(0);
+        }
+
         // --- Fungsi Perhitungan Keuangan (Update dengan Filter Tanggal) ---
         function calculateFinancials(useDateFilter = false) {
             if (currentUserRole !== 'admin') return; 
@@ -1433,7 +1631,6 @@
             document.getElementById('totalPendapatanKotorKeseluruhan').textContent = formatCurrency(totalPendapatanKotorKeseluruhan);
         }
 
-
         // --- Fungsi Rincian Pengeluaran ---
         function updatePengeluaranSummary() {
             if (currentUserRole !== 'admin') return; 
@@ -1471,8 +1668,6 @@
 
         // --- Fungsi Update Ringkasan Harian di Sidebar ---
         function updateSidebarDailySummary() {
-            // Fungsi ini akan selalu berjalan, tapi elemennya sendiri akan disembunyikan/ditampilkan
-            // berdasarkan peran pengguna di initializeUIForRole()
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
@@ -1498,7 +1693,6 @@
             document.getElementById('sidebarLabaHariIni').textContent = formatCurrency(labaHarian);
             document.getElementById('sidebarPengeluaranHariIni').textContent = formatCurrency(pengeluaranHarian);
         }
-
 
         // --- Fungsi Hitung Harga Jual ---
         function saveSellingPriceHistory() {
@@ -1699,7 +1893,6 @@
             }
         }
 
-
         // --- FUNGSI CHART.JS ---
         function renderMonthlyChart(dataToChart = transactions) {
             if (currentUserRole !== 'admin') return; 
@@ -1746,7 +1939,7 @@
             const profitColor = isDarkMode ? 'rgba(76, 175, 80, 0.9)' : 'rgba(40, 167, 69, 0.7)'; 
             const expenseColor = isDarkMode ? 'rgba(255, 99, 71, 0.9)' : 'rgba(220, 53, 69, 0.7)'; 
 
-            const textColor = isDarkMode ? '#e0e0e0' : '#333'; 
+            const textColor = isDarkMode ? '#e0e0e0' : '#334155'; 
             const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'; 
 
             monthlyChart = new Chart(ctx, {
@@ -1866,9 +2059,7 @@
             document.getElementById('profitPercentageLaba').value = '20'; 
 
             // Tambahkan event listener untuk navigasi
-            // PENTING: Gunakan event delegation pada parent (ul#mainMenu)
             document.getElementById('mainMenu').addEventListener('click', function(e) {
-                // Pastikan yang diklik adalah link <a> di dalam <li> dengan kelas nav-link
                 if (e.target.tagName === 'A' && e.target.classList.contains('nav-link')) {
                     e.preventDefault();
                     const pageId = e.target.dataset.page;
