@@ -709,6 +709,10 @@
                 <input type="date" id="pendapatanDate">
             </div>
             <div class="form-group">
+                <label for="namaBarangPendapatan">Nama Barang (Opsional):</label>
+                <input type="text" id="namaBarangPendapatan" placeholder="Contoh: Kemeja Batik">
+            </div>
+            <div class="form-group">
                 <label for="nominalPendapatan">Nominal Pendapatan (Rp):</label>
                 <input type="number" id="nominalPendapatan" placeholder="Contoh: 100" min="0">
             </div>
@@ -747,6 +751,7 @@
                     <thead>
                         <tr>
                             <th>Tanggal</th>
+                            <th>Nama Barang</th>
                             <th>Nominal Pendapatan (Rp)</th>
                             <th>Persentase Laba (%)</th>
                             <th>Laba Dihitung (Rp)</th>
@@ -1069,11 +1074,12 @@
 
         function calculateProfitAndAddTransaction() {
             const dateInput = document.getElementById('pendapatanDate').value;
+            const namaBarangInput = document.getElementById('namaBarangPendapatan').value.trim();
             const nominalPendapatanInput = document.getElementById('nominalPendapatan').value;
             const profitPercentageLabaInput = document.getElementById('profitPercentageLaba').value;
 
             if (!dateInput || !nominalPendapatanInput || !profitPercentageLabaInput) {
-                alert('Semua kolom harus diisi!');
+                alert('Tanggal, Nominal Pendapatan, dan Persentase Laba harus diisi!');
                 return;
             }
 
@@ -1100,7 +1106,8 @@
             const newTransaction = {
                 date: new Date(dateInput),
                 type: 'omzet', 
-                description: `Laba dari Pendapatan ${formatCurrency(nominalPendapatan)} (${profitPercentageLaba}%)`, 
+                productName: namaBarangInput || '-',
+                description: `Laba dari ${namaBarangInput ? namaBarangInput + ' ' : ''}${formatCurrency(nominalPendapatan)} (${profitPercentageLaba}%)`, 
                 amount: roundedLaba, 
                 originalNominal: nominalPendapatan, 
                 profitPercentage: profitPercentageLaba 
@@ -1109,6 +1116,7 @@
             transactions.push(newTransaction);
             saveTransactions();
             
+            document.getElementById('namaBarangPendapatan').value = '';
             document.getElementById('nominalPendapatan').value = '';
             document.getElementById('pendapatanDate').value = getTodayDateString(); 
 
@@ -1247,7 +1255,7 @@
             if (sortedTransactions.length === 0) {
                 const row = tableBody.insertRow();
                 const cell = row.insertCell(0);
-                if (type === 'omzet') cell.colSpan = 5; 
+                if (type === 'omzet') cell.colSpan = 6; 
                 else if (type === 'pengeluaran') cell.colSpan = 4;
                 
                 cell.textContent = `Tidak ada ${type === 'omzet' ? 'data pendapatan' : 'data pengeluaran'} ditemukan.`;
@@ -1260,15 +1268,16 @@
                 row.insertCell(0).textContent = t.date.toISOString().slice(0, 10);
                 
                 if (t.type === 'omzet') { 
-                    row.insertCell(1).textContent = formatCurrency(t.originalNominal || t.amount); 
-                    row.insertCell(2).textContent = `${t.profitPercentage || 0}%`; 
-                    row.insertCell(3).textContent = formatCurrency(t.amount); 
+                    row.insertCell(1).textContent = t.productName || '-';
+                    row.insertCell(2).textContent = formatCurrency(t.originalNominal || t.amount); 
+                    row.insertCell(3).textContent = `${t.profitPercentage || 0}%`; 
+                    row.insertCell(4).textContent = formatCurrency(t.amount); 
                 } else if (t.type === 'pengeluaran') {
                     row.insertCell(1).textContent = t.description;
                     row.insertCell(2).textContent = formatCurrency(t.amount);
                 } 
 
-                const actionCell = row.insertCell(t.type === 'omzet' ? 4 : 3); 
+                const actionCell = row.insertCell(t.type === 'omzet' ? 5 : 3); 
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Hapus';
                 deleteButton.className = 'delete-btn';
