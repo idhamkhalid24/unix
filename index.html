@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOKO UNIX</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TOKO UNIX</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
         :root {
             /* Mode Terang */
             --bg-body: #f8fafc;
@@ -659,6 +659,19 @@
             padding-top: 1rem;
         }
 
+        /* Tombol Logout */
+        #logoutButton {
+            background-color: var(--button-danger-bg);
+            color: white;
+            margin-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #logoutButton:hover {
+            background-color: var(--button-danger-hover);
+            color: white;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             body {
@@ -757,7 +770,7 @@
             }
         }
 
-        /* Tabs untuk pendapatan kotor */
+        /* Tabs untuk transaksi kotor */
         .tabs {
             display: flex;
             border-bottom: 1px solid var(--border-color);
@@ -787,267 +800,247 @@
     </style>
 </head>
 <body>
-    <div id="loginOverlay">
-        <div class="login-box">
-            <h2>Selamat Datang di TOKO UNIX</h2>
-            <input type="password" id="passwordInput" placeholder="Masukkan Kata Sandi">
-            <button onclick="checkPassword()">Masuk</button>
-        </div>
-    </div>
-
-    <div class="sidebar">
-        <h2>TOKO UNIX</h2>
-        <nav>
-            <ul id="mainMenu">
-                <li id="menuPendapatan"><a href="#pendapatan" class="nav-link active" data-page="pendapatan">1. Pendapatan</a></li>
-                <li id="menuHargaJual" class="hidden-menu-admin"><a href="#harga-jual" class="nav-link" data-page="harga-jual">2. Tentukan Harga Jual</a></li>
-                <li id="menuPengeluaran"><a href="#pengeluaran" class="nav-link" data-page="pengeluaran">3. Pengeluaran</a></li>
-                <li id="menuLaporanKeuangan" class="hidden-menu-admin"><a href="#ringkasan-keuangan" class="nav-link" data-page="ringkasan-keuangan">4. Laporan Keuangan</a></li>
-            </ul>
-        </nav>
-
+<div id="loginOverlay">
+<div class="login-box">
+<h2>Selamat Datang di TOKO UNIX</h2>
+<input id="passwordInput" placeholder="Masukkan Kata Sandi" type="password"/>
+<button onclick="checkPassword()">Masuk</button>
+</div>
+</div>
+<div class="sidebar">
+<h2>TOKO UNIX</h2>
+<nav>
+<ul id="mainMenu">
+<li id="menuTransaksi"><a class="nav-link active" data-page="transaksi" href="#transaksi">1. Transaksi</a></li>
+<li class="hidden-menu-admin" id="menuHargaJual"><a class="nav-link" data-page="harga-jual" href="#harga-jual">2. Tentukan Harga Jual</a></li>
+<li id="menuPengeluaran"><a class="nav-link" data-page="pengeluaran" href="#pengeluaran">3. Pengeluaran</a></li>
+<li class="hidden-menu-admin" id="menuLaporanKeuangan"><a class="nav-link" data-page="ringkasan-keuangan" href="#ringkasan-keuangan">4. Laporan Keuangan</a></li>
+</ul>
+</nav>
 <!-- RINGKASAN HARIAN - VERSI RAPAT -->
 <div class="daily-summary-section sidebar-admin-feature" style="margin-top: 0; padding: 10px 0 5px 0; border-top: none;">
-    <h3 style="margin: 0 0 8px 0; font-size: 15px;">Ringkasan Harian Cepat</h3>
-    <p style="margin: 4px 0;"><span class="gross-income">Pendapatan:</span> <strong id="sidebarPendapatanKotorHariIni">Rp 0</strong></p>
-    <p style="margin: 4px 0;"><span class="profit">Laba:</span> <strong id="sidebarLabaHariIni">Rp 0</strong></p>
-    <p style="margin: 4px 0;"><span class="expense">Pengeluaran:</span> <strong id="sidebarPengeluaranHariIni">Rp 0</strong></p>
+<h3 style="margin: 0 0 8px 0; font-size: 15px;">Ringkasan Harian Cepat</h3>
+<p style="margin: 4px 0;"><span class="gross-income">Transaksi:</span> <strong id="sidebarTransaksiKotorHariIni">Rp 0</strong></p>
+<p style="margin: 4px 0;"><span class="profit">Laba:</span> <strong id="sidebarLabaHariIni">Rp 0</strong></p>
+<p style="margin: 4px 0;"><span class="expense">Pengeluaran:</span> <strong id="sidebarPengeluaranHariIni">Rp 0</strong></p>
 </div>
-
-        <button class="theme-toggle-button sidebar-admin-feature" onclick="toggleTheme()">
-            <span>Mode Terang/Gelap</span>
-        </button>
-        <button class="shortcut-button sidebar-admin-feature" onclick="window.open('http://youtube.com', '_blank')">
-            <span>YouTube</span>
-        </button>
-        <button class="shortcut-button sidebar-admin-feature" onclick="window.open('http://spotify.com', '_blank')">
-            <span>Spotify</span>
-        </button>
-    </div>
-
-    <div class="main-content">
-        <div id="pendapatan" class="page active">
-            <h2>Catat Pendapatan & Hitung Laba</h2>
-            <div class="form-group">
-                <label for="pendapatanDate">Tanggal:</label>
-                <input type="date" id="pendapatanDate">
-            </div>
-            <div class="form-group">
-                <label for="namaBarangPendapatan">Nama Barang (Opsional):</label>
-                <input type="text" id="namaBarangPendapatan" placeholder="Contoh: Kemeja Batik">
-            </div>
-            <div class="form-group">
-                <label for="nominalPendapatan">Nominal Pendapatan (Rp):</label>
-                <input type="number" id="nominalPendapatan" placeholder="Contoh: 100" min="0">
-            </div>
-            <div class="form-group">
-                <label for="profitPercentageLaba">Persentase Laba (%):</label>
-                <input type="number" id="profitPercentageLaba" value="20" min="0" max="100">
-            </div>
-            <div class="form-group">
-                <button onclick="calculateProfitAndAddTransaction()">Tambahkan Pendapatan</button>
-            </div>
-
-            <hr>
-
-            <div class="tabs">
-                <div class="tab active" onclick="switchTab('summary')">Ringkasan</div>
-                <div class="tab" onclick="switchTab('filter')">Filter Pendapatan</div>
-            </div>
-
-            <div id="summary-tab" class="tab-content active">
-                <div class="gross-income-summary-section hidden-menu-admin">
-                    <h3>Rincian Pendapatan Kotor</h3>
-                    <p>Pendapatan Kotor Hari Ini: <strong id="pendapatanKotorHariIni">Rp 0</strong></p>
-                    <p>Pendapatan Kotor Bulan Ini: <strong id="pendapatanKotorBulanIni">Rp 0</strong></p>
-                    <p>Total Pendapatan Kotor Keseluruhan: <strong id="totalPendapatanKotorKeseluruhan">Rp 0</strong></p>
-                </div>
-
-                <div class="profit-summary-section hidden-menu-admin">
-                    <h3>Rincian Laba Dihitung</h3>
-                    <p>Laba Hari Ini: <strong id="labaHariIni">Rp 0</strong></p>
-                    <p>Laba Bulan Ini: <strong id="labaBulanIni">Rp 0</strong></p>
-                    <p>Total Laba Keseluruhan: <strong id="totalLabaKeseluruhan">Rp 0</strong></p>
-                </div>
-            </div>
-
-            <div id="filter-tab" class="tab-content">
-                <div class="gross-income-filter-section hidden-menu-admin">
-                    <h3>Filter Pendapatan Kotor</h3>
-                    <div class="search-controls">
-                        <label for="grossIncomeStartDate">Dari Tanggal:</label>
-                        <input type="date" id="grossIncomeStartDate">
-                        <label for="grossIncomeEndDate">Sampai Tanggal:</label>
-                        <input type="date" id="grossIncomeEndDate">
-                        <button onclick="filterGrossIncome()" style="background-color: var(--button-info-bg);">Filter</button>
-                        <button onclick="resetGrossIncomeFilter()" style="background-color: var(--button-secondary-bg);">Reset</button>
-                    </div>
-                    <p>Total Pendapatan Kotor: <strong id="filteredGrossIncome">Rp 0</strong></p>
-                </div>
-            </div>
-
-            <div class="transactions-list">
-                <h3>Daftar Pendapatan & Laba</h3>
-                <div class="search-controls">
-                    <input type="date" id="searchPendapatanStartDate" placeholder="Dari Tanggal">
-                    <input type="date" id="searchPendapatanEndDate" placeholder="Sampai Tanggal">
-                    <button onclick="searchTransactionsByType('omzet')">Cari</button>
-                    <button onclick="displayTransactionsByType('omzet')" style="background-color: var(--button-secondary-bg);">Tampilkan Semua</button>
-                </div>
-                <table id="pendapatanTable">
-                    <thead>
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>Nama Barang</th>
-                            <th>Nominal Pendapatan (Rp)</th>
-                            <th>Persentase Laba (%)</th>
-                            <th>Laba Dihitung (Rp)</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Data akan diisi oleh JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="harga-jual" class="page">
-            <h2>Tentukan Harga Jual Barang</h2>
-            <div class="form-group">
-                <label for="productName">Nama Barang (Opsional):</label>
-                <input type="text" id="productName" placeholder="Contoh: Kemeja Batik">
-            </div>
-            <div class="form-group">
-                <label for="productCode">Kode Barang (Opsional):</label>
-                <input type="text" id="productCode" placeholder="Contoh: KB001">
-            </div>
-            <div class="form-group price-calc-input">
-                <label for="costPriceProduct">Modal (Rp):</label>
-                <input type="number" id="costPriceProduct" placeholder="Contoh: 100" min="0" required>
-            </div>
-            <div class="form-group price-calc-input">
-                <label for="profitPercentage">Persentase Keuntungan (%):</label>
-                <input type="number" id="profitPercentage" value="20" min="0" max="100">
-            </div>
-            <div class="form-group price-calc-input">
-                <label for="taxPercentage">Pajak (%):</label>
-                <input type="number" id="taxPercentage" value="0" min="0" max="100">
-            </div>
-            <div class="form-group price-calc-input">
-                <label for="discountPercentage">Diskon (%):</label>
-                <input type="number" id="discountPercentage" value="0" min="0" max="100">
-            </div>
-            <div class="form-group">
-                <button onclick="addSellingPriceCalculation()">Hitung Harga Jual</button>
-            </div>
-            
-            <hr>
-
-            <div class="transactions-list">
-                <h3>Riwayat Perhitungan Harga Jual</h3>
-                <div class="price-search-controls">
-                    <input type="text" id="searchPriceTerm" placeholder="Cari Nama/Kode Barang">
-                    <button onclick="searchSellingPriceHistory()">Cari</button>
-                    <button onclick="displaySellingPriceHistory()" style="background-color: var(--button-secondary-bg);">Tampilkan Semua</button>
-                </div>
-                <table id="sellingPriceTable">
-                    <thead>
-                        <tr>
-                            <th>Nama Barang</th>
-                            <th>Kode Barang</th>
-                            <th>Modal</th>
-                            <th>Keuntungan Bersih (Rp)</th>
-                            <th>Pajak (%)</th>
-                            <th>Diskon (%)</th>
-                            <th>Harga Jual</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Data akan diisi oleh JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="pengeluaran" class="page">
-            <h2>Catat Pengeluaran</h2>
-            <div class="form-group">
-                <label for="pengeluaranDate">Tanggal:</label>
-                <input type="date" id="pengeluaranDate">
-            </div>
-            <div class="form-group">
-                <label for="pengeluaranDescription">Deskripsi Pengeluaran:</label>
-                <input type="text" id="pengeluaranDescription" placeholder="Contoh: Pembelian bahan baku, Gaji karyawan">
-            </div>
-             <div class="form-group">
-                <label for="pengeluaranAmount">Jumlah Pengeluaran (Rp):</label>
-                <input type="number" id="pengeluaranAmount" placeholder="Contoh: 50" min="0">
-            </div>
-            <div class="form-group">
-                <button onclick="addTransaction('pengeluaran')">Tambahkan Pengeluaran</button>
-            </div>
-
-            <hr>
-            <div class="expense-summary-section hidden-menu-admin">
-                <h3>Rincian Pengeluaran</h3>
-                <p>Pengeluaran Hari Ini: <strong id="pengeluaranHariIni">Rp 0</strong></p>
-                <p>Pengeluaran Bulan Ini: <strong id="pengeluaranBulanIni">Rp 0</strong></p>
-                <p>Total Pengeluaran Keseluruhan: <strong id="totalPengeluaranKeseluruhan">Rp 0</strong></p>
-            </div>
-
-            <div class="transactions-list">
-                <h3>Daftar Pengeluaran</h3>
-                <div class="search-controls">
-                    <input type="date" id="searchPengeluaranStartDate" placeholder="Dari Tanggal">
-                    <input type="date" id="searchPengeluaranEndDate" placeholder="Sampai Tanggal">
-                    <button onclick="searchTransactionsByType('pengeluaran')">Cari</button>
-                    <button onclick="displayTransactionsByType('pengeluaran')" style="background-color: var(--button-secondary-bg);">Tampilkan Semua</button>
-                </div>
-                <table id="pengeluaranTable">
-                    <thead>
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>Deskripsi</th>
-                            <th>Jumlah (Rp)</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Data akan diisi oleh JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="ringkasan-keuangan" class="page">
-            <h2>Laporan Keuangan Keseluruhan</h2>
-            <div class="search-controls" style="margin-bottom: 1.5rem;">
-                <label for="summaryStartDate">Dari Tanggal:</label>
-                <input type="date" id="summaryStartDate">
-                <label for="summaryEndDate">Sampai Tanggal:</label>
-                <input type="date" id="summaryEndDate">
-                <button onclick="calculateFinancials(true)" style="background-color: var(--button-info-bg);">Cari Laporan</button>
-                <button onclick="calculateFinancials(false)" style="background-color: var(--button-secondary-bg);">Tampilkan Semua</button>
-            </div>
-            
-            <div class="financial-summary-section">
-                <p>Total Laba Dihitung: <strong id="totalOmzetSummary">Rp 0</strong></p>
-                <p>Total Pengeluaran: <strong id="totalPengeluaranSummary">Rp 0</strong></p>
-                <p>Laba Bersih: <strong id="netProfitSummary">Rp 0</strong></p>
-            </div>
-            
-            <hr>
-            <div class="chart-container">
-                <canvas id="monthlyFinancialChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const MASTER_PASSWORD = "unix"; // Kata sandi utama untuk Admin (akses penuh)
-        const ADMIN_PASSWORD = "admin"; // Kata sandi untuk Kasir (akses terbatas)
+<button class="theme-toggle-button sidebar-admin-feature" onclick="toggleTheme()">
+<span>Mode Terang/Gelap</span>
+</button>
+<button class="shortcut-button sidebar-admin-feature" onclick="window.open('http://youtube.com', '_blank')">
+<span>YouTube</span>
+</button>
+<button class="shortcut-button sidebar-admin-feature" onclick="window.open('http://spotify.com', '_blank')">
+<span>Spotify</span>
+</button>
+</div>
+<div class="main-content">
+<div class="page active" id="transaksi">
+<h2>Catat Transaksi &amp; Hitung Laba</h2>
+<div class="form-group">
+<label for="transaksiDate">Tanggal:</label>
+<input id="transaksiDate" type="date"/>
+</div>
+<div class="form-group">
+<label for="namaBarangTransaksi">Nama Barang (Opsional):</label>
+<input id="namaBarangTransaksi" placeholder="Contoh: Kemeja Batik" type="text"/>
+</div>
+<div class="form-group">
+<label for="nominalTransaksi">Nominal Transaksi (Rp):</label>
+<input id="nominalTransaksi" min="0" placeholder="Contoh: 100" type="number"/>
+</div>
+<div class="form-group">
+<label for="profitPercentageLaba">Persentase Laba (%):</label>
+<input id="profitPercentageLaba" max="100" min="0" type="number" value="20"/>
+</div><div class="form-group"><label for="discountPercentageTransaksi">Diskon (%)</label><input id="discountPercentageTransaksi" max="100" min="0" type="number" value="0"/></div>
+<div class="form-group">
+<button onclick="calculateProfitAndAddTransaction()">Proses Transaksi</button>
+</div>
+<hr/>
+<div class="tabs">
+<div class="tab active" onclick="switchTab('summary')">Ringkasan</div>
+<div class="tab" onclick="switchTab('filter')">Filter Transaksi</div>
+</div>
+<div class="tab-content active" id="summary-tab">
+<div class="gross-income-summary-section hidden-menu-admin">
+<h3>Rincian Transaksi Kotor</h3>
+<p>Transaksi Kotor Hari Ini: <strong id="transaksiKotorHariIni">Rp 0</strong></p>
+<p>Transaksi Kotor Bulan Ini: <strong id="transaksiKotorBulanIni">Rp 0</strong></p>
+<p>Total Transaksi Kotor Keseluruhan: <strong id="totalTransaksiKotorKeseluruhan">Rp 0</strong></p>
+</div>
+<div class="profit-summary-section hidden-menu-admin">
+<h3>Rincian Laba Dihitung</h3>
+<p>Laba Hari Ini: <strong id="labaHariIni">Rp 0</strong></p>
+<p>Laba Bulan Ini: <strong id="labaBulanIni">Rp 0</strong></p>
+<p>Total Laba Keseluruhan: <strong id="totalLabaKeseluruhan">Rp 0</strong></p>
+</div>
+</div>
+<div class="tab-content" id="filter-tab">
+<div class="gross-income-filter-section hidden-menu-admin">
+<h3>Filter Transaksi Kotor</h3>
+<div class="search-controls">
+<label for="grossIncomeStartDate">Dari Tanggal:</label>
+<input id="grossIncomeStartDate" type="date"/>
+<label for="grossIncomeEndDate">Sampai Tanggal:</label>
+<input id="grossIncomeEndDate" type="date"/>
+<button onclick="filterGrossIncome()" style="background-color: var(--button-info-bg);">Filter</button>
+<button onclick="resetGrossIncomeFilter()" style="background-color: var(--button-secondary-bg);">Reset</button>
+</div>
+<p>Total Transaksi Kotor: <strong id="filteredGrossIncome">Rp 0</strong></p>
+</div>
+</div>
+<div class="transactions-list">
+<h3>Daftar Transaksi &amp; Laba</h3>
+<div class="search-controls">
+<input id="searchTransaksiStartDate" placeholder="Dari Tanggal" type="date"/>
+<input id="searchTransaksiEndDate" placeholder="Sampai Tanggal" type="date"/>
+<button onclick="searchTransactionsByType('omzet')">Cari</button>
+<button onclick="displayTransactionsByType('omzet')" style="background-color: var(--button-secondary-bg);">Tampilkan Semua</button>
+</div>
+<table id="transaksiTable">
+<thead>
+<tr>
+<th>Tanggal</th>
+<th>Nama Barang</th>
+<th>Nominal Transaksi (Rp)</th>
+<th>Persentase Laba (%)</th>
+<th>Laba Dihitung (Rp)</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody>
+<!-- Data akan diisi oleh JavaScript -->
+</tbody>
+</table>
+</div>
+</div>
+<div class="page" id="harga-jual">
+<h2>Tentukan Harga Jual Barang</h2>
+<div class="form-group">
+<label for="productName">Nama Barang (Opsional):</label>
+<input id="productName" placeholder="Contoh: Kemeja Batik" type="text"/>
+</div>
+<div class="form-group">
+<label for="productCode">Kode Barang (Opsional):</label>
+<input id="productCode" placeholder="Contoh: KB001" type="text"/>
+</div>
+<div class="form-group price-calc-input">
+<label for="costPriceProduct">Modal (Rp):</label>
+<input id="costPriceProduct" min="0" placeholder="Contoh: 100" required="" type="number"/>
+</div>
+<div class="form-group price-calc-input">
+<label for="profitPercentage">Persentase Keuntungan (%):</label>
+<input id="profitPercentage" max="100" min="0" type="number" value="20"/>
+</div>
+<div class="form-group price-calc-input">
+<label for="taxPercentage">Pajak (%):</label>
+<input id="taxPercentage" max="100" min="0" type="number" value="0"/>
+</div>
+<div class="form-group price-calc-input">
+<label for="discountPercentage">Diskon (%):</label>
+<input id="discountPercentage" max="100" min="0" type="number" value="0"/>
+</div>
+<div class="form-group">
+<button onclick="addSellingPriceCalculation()">Hitung Harga Jual</button>
+</div>
+<hr/>
+<div class="transactions-list">
+<h3>Riwayat Perhitungan Harga Jual</h3>
+<div class="price-search-controls">
+<input id="searchPriceTerm" placeholder="Cari Nama/Kode Barang" type="text"/>
+<button onclick="searchSellingPriceHistory()">Cari</button>
+<button onclick="displaySellingPriceHistory()" style="background-color: var(--button-secondary-bg);">Tampilkan Semua</button>
+</div>
+<table id="sellingPriceTable">
+<thead>
+<tr>
+<th>Nama Barang</th>
+<th>Kode Barang</th>
+<th>Modal</th>
+<th>Keuntungan Bersih (Rp)</th>
+<th>Pajak (%)</th>
+<th>Diskon (%)</th>
+<th>Harga Jual</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody>
+<!-- Data akan diisi oleh JavaScript -->
+</tbody>
+</table>
+</div>
+</div>
+<div class="page" id="pengeluaran">
+<h2>Catat Pengeluaran</h2>
+<div class="form-group">
+<label for="pengeluaranDate">Tanggal:</label>
+<input id="pengeluaranDate" type="date"/>
+</div>
+<div class="form-group">
+<label for="pengeluaranDescription">Deskripsi Pengeluaran:</label>
+<input id="pengeluaranDescription" placeholder="Contoh: Pembelian bahan baku, Gaji karyawan" type="text"/>
+</div>
+<div class="form-group">
+<label for="pengeluaranAmount">Jumlah Pengeluaran (Rp):</label>
+<input id="pengeluaranAmount" min="0" placeholder="Contoh: 50" type="number"/>
+</div>
+<div class="form-group">
+<button onclick="addTransaction('pengeluaran')">Tambahkan Pengeluaran</button>
+</div>
+<hr/>
+<div class="expense-summary-section hidden-menu-admin">
+<h3>Rincian Pengeluaran</h3>
+<p>Pengeluaran Hari Ini: <strong id="pengeluaranHariIni">Rp 0</strong></p>
+<p>Pengeluaran Bulan Ini: <strong id="pengeluaranBulanIni">Rp 0</strong></p>
+<p>Total Pengeluaran Keseluruhan: <strong id="totalPengeluaranKeseluruhan">Rp 0</strong></p>
+</div>
+<div class="transactions-list">
+<h3>Daftar Pengeluaran</h3>
+<div class="search-controls">
+<input id="searchPengeluaranStartDate" placeholder="Dari Tanggal" type="date"/>
+<input id="searchPengeluaranEndDate" placeholder="Sampai Tanggal" type="date"/>
+<button onclick="searchTransactionsByType('pengeluaran')">Cari</button>
+<button onclick="displayTransactionsByType('pengeluaran')" style="background-color: var(--button-secondary-bg);">Tampilkan Semua</button>
+</div>
+<table id="pengeluaranTable">
+<thead>
+<tr>
+<th>Tanggal</th>
+<th>Deskripsi</th>
+<th>Jumlah (Rp)</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody>
+<!-- Data akan diisi oleh JavaScript -->
+</tbody>
+</table>
+</div>
+</div>
+<div class="page" id="ringkasan-keuangan">
+<h2>Laporan Keuangan Keseluruhan</h2>
+<div class="search-controls" style="margin-bottom: 1.5rem;">
+<label for="summaryStartDate">Dari Tanggal:</label>
+<input id="summaryStartDate" type="date"/>
+<label for="summaryEndDate">Sampai Tanggal:</label>
+<input id="summaryEndDate" type="date"/>
+<button onclick="calculateFinancials(true)" style="background-color: var(--button-info-bg);">Cari Laporan</button>
+<button onclick="calculateFinancials(false)" style="background-color: var(--button-secondary-bg);">Tampilkan Semua</button>
+</div>
+<div class="financial-summary-section">
+<p>Total Laba Dihitung: <strong id="totalOmzetSummary">Rp 0</strong></p>
+<p>Total Pengeluaran: <strong id="totalPengeluaranSummary">Rp 0</strong></p>
+<p>Laba Bersih: <strong id="netProfitSummary">Rp 0</strong></p>
+</div>
+<hr/>
+<div class="chart-container">
+<canvas id="monthlyFinancialChart"></canvas>
+</div>
+</div>
+</div>
+<script>
+        const MASTER_PASSWORD = "admin"; // Kata sandi utama untuk Admin (akses penuh)
+        const ADMIN_PASSWORD = "kasir"; // Kata sandi untuk Kasir (akses terbatas)
 
         let transactions = []; 
         let sellingPriceHistory = []; 
@@ -1059,20 +1052,65 @@
             const passwordInput = document.getElementById('passwordInput').value;
             if (passwordInput === MASTER_PASSWORD) {
                 currentUserRole = 'admin'; // Peran admin utama
-                document.getElementById('loginOverlay').style.display = 'none';
-                document.body.style.overflow = 'auto'; // Re-enable scrolling
-                initializeUIForRole(); // Panggil fungsi inisialisasi UI
-                initializeApp(); 
+                handleSuccessfulLogin();
             } else if (passwordInput === ADMIN_PASSWORD) {
                 currentUserRole = 'cashier'; // Peran kasir (terbatas)
-                document.getElementById('loginOverlay').style.display = 'none';
-                document.body.style.overflow = 'auto'; // Re-enable scrolling
-                initializeUIForRole(); // Panggil fungsi inisialisasi UI
-                initializeApp(); 
+                handleSuccessfulLogin();
             } else {
                 alert('Kata sandi salah. Silakan coba lagi.');
                 document.getElementById('passwordInput').value = '';
             }
+        }
+
+        function handleSuccessfulLogin() {
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Re-enable scrolling
+            
+            // Simpan status login di localStorage
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userRole', currentUserRole);
+            
+            initializeUIForRole();
+            if (currentUserRole === 'cashier') {
+    // Sembunyikan kolom Persentase Laba
+    const profitGroup = document.querySelector('label[for="profitPercentageLaba"]')?.parentElement;
+    if (profitGroup) {
+        profitGroup.style.display = 'none';
+    }
+
+    // Sembunyikan tab Ringkasan dan Filter Transaksi
+    document.querySelectorAll('.tabs .tab').forEach(tab => {
+        if (tab.textContent.includes("Ringkasan") || tab.textContent.includes("Filter Transaksi")) {
+            tab.style.display = 'none';
+        }
+    });
+
+    // Nonaktifkan konten tab Ringkasan dan Filter
+    document.getElementById('summary-tab')?.classList.remove('active');
+    document.getElementById('filter-tab')?.classList.remove('active');
+}
+
+        if (currentUserRole === 'cashier') {
+            const profitGroup = document.querySelector('label[for="profitPercentageLaba"]')?.parentElement;
+            if (profitGroup) {
+                profitGroup.style.display = 'none';
+            }
+        }
+
+            initializeApp();
+        }
+
+        function logout() {
+            // Hapus status login dari localStorage
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userRole');
+            
+            // Reset aplikasi
+            currentUserRole = null;
+            document.getElementById('loginOverlay').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('passwordInput').focus();
         }
 
         // --- Fungsi Inisialisasi UI Berdasarkan Peran ---
@@ -1093,11 +1131,60 @@
                 document.querySelectorAll('.sidebar-admin-feature').forEach(el => {
                     el.style.display = '';
                 });
-                showPage('pendapatan'); // Default page for admin
+                
+                // Tambahkan tombol logout di sidebar
+                addLogoutButton();
+                showPage('transaksi'); // Default page for admin
             } else if (currentUserRole === 'cashier') {
-                // Untuk kasir, hanya Pendapatan dan Pengeluaran yang terlihat
-                showPage('pendapatan'); // Default page for cashier
+                    // Untuk kasir, hanya menu Transaksi yang ditampilkan
+    document.querySelectorAll('#mainMenu li').forEach(el => {
+        if (el.id !== 'menuTransaksi') {
+            el.style.display = 'none';
+        }
+    });
+
+                    // Untuk kasir, hanya menu Transaksi yang ditampilkan
+    document.querySelectorAll('#mainMenu li').forEach(el => {
+        if (el.id !== 'menuTransaksi') {
+            el.style.display = 'none';
+        }
+    });
+
+                    // Untuk kasir, hanya tampilkan menu Transaksi
+    document.querySelectorAll('#mainMenu li').forEach(el => {
+        if (el.id !== 'menuTransaksi') {
+            el.style.display = 'none';
+        }
+    });
+
+                // Untuk kasir, hanya menu Transaksi yang terlihat
+                document.querySelectorAll('#mainMenu li').forEach(el => {
+                    if (el.id !== 'menuTransaksi') {
+                        el.style.display = 'none';
+                    }
+                });
+
+                // Untuk kasir, hanya Transaksi dan Pengeluaran yang terlihat
+                addLogoutButton();
+                showPage('transaksi'); // Default page for cashier
             }
+        }
+
+        function addLogoutButton() {
+            // Cek apakah tombol logout sudah ada
+            if (document.getElementById('logoutButton')) {
+                return;
+            }
+            
+            const logoutBtn = document.createElement('button');
+            logoutBtn.id = 'logoutButton';
+            logoutBtn.className = 'shortcut-button';
+            logoutBtn.innerHTML = '<span>Logout</span>';
+            logoutBtn.onclick = logout;
+            
+            // Tambahkan tombol logout ke sidebar
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.appendChild(logoutBtn);
         }
 
         // --- Fungsi Utilitas Umum ---
@@ -1164,7 +1251,7 @@
             }
         }
 
-        // --- Fungsi Tab Pendapatan Kotor ---
+        // --- Fungsi Tab Transaksi Kotor ---
         function switchTab(tabId) {
             // Sembunyikan semua tab content
             document.querySelectorAll('.tab-content').forEach(tab => {
@@ -1201,12 +1288,12 @@
             // Logika untuk inisialisasi data atau tampilan spesifik setiap halaman
             updateSidebarDailySummary(); 
 
-            if (pageId === 'pendapatan') { 
-                document.getElementById('pendapatanDate').value = getTodayDateString();
+            if (pageId === 'transaksi') { 
+                document.getElementById('transaksiDate').value = getTodayDateString();
                 document.getElementById('profitPercentageLaba').value = '20'; 
                 if (currentUserRole === 'admin') { 
                     updateLabaSummary(); 
-                    updatePendapatanKotorSummary(); 
+                    updateTransaksiKotorSummary(); 
                 }
                 displayTransactionsByType('omzet'); 
             } else if (pageId === 'pengeluaran') {
@@ -1223,39 +1310,39 @@
                     renderMonthlyChart(); 
                 } else {
                     alert('Anda tidak memiliki akses ke laporan keuangan.');
-                    showPage('pendapatan'); // Redirect ke pendapatan jika tidak ada akses
+                    showPage('transaksi'); // Redirect ke transaksi jika tidak ada akses
                 }
             } else if (pageId === 'harga-jual') { 
                 if (currentUserRole === 'admin') {
                     displaySellingPriceHistory();
                 } else {
                     alert('Anda tidak memiliki akses untuk menentukan harga jual.');
-                    showPage('pendapatan'); // Redirect ke pendapatan jika tidak ada akses
+                    showPage('transaksi'); // Redirect ke transaksi jika tidak ada akses
                 }
             }
         }
 
         // --- Fungsi Transaksi (Laba & Pengeluaran) ---
         function calculateProfitAndAddTransaction() {
-            const dateInput = document.getElementById('pendapatanDate').value;
-            const namaBarangInput = document.getElementById('namaBarangPendapatan').value.trim();
-            const nominalPendapatanInput = document.getElementById('nominalPendapatan').value;
+            const dateInput = document.getElementById('transaksiDate').value;
+            const namaBarangInput = document.getElementById('namaBarangTransaksi').value.trim();
+            const nominalTransaksiInput = document.getElementById('nominalTransaksi').value;
             const profitPercentageLabaInput = document.getElementById('profitPercentageLaba').value;
 
-            if (!dateInput || !nominalPendapatanInput || !profitPercentageLabaInput) {
-                alert('Tanggal, Nominal Pendapatan, dan Persentase Laba harus diisi!');
+            if (!dateInput || !nominalTransaksiInput || !profitPercentageLabaInput) {
+                alert('Tanggal, Nominal Transaksi, dan Persentase Laba harus diisi!');
                 return;
             }
 
-            let nominalPendapatan = parseFloat(nominalPendapatanInput);
-            if (isNaN(nominalPendapatan) || nominalPendapatan < 0) {
-                alert('Nominal Pendapatan harus angka positif!');
+            let nominalTransaksi = parseFloat(nominalTransaksiInput);
+            if (isNaN(nominalTransaksi) || nominalTransaksi < 0) {
+                alert('Nominal Transaksi harus angka positif!');
                 return;
             }
             
             // Auto-multiply by 1000 jika input kurang dari 1000 dan tanpa desimal, dan panjangnya <= 3 digit
-            if (nominalPendapatanInput.indexOf('.') === -1 && nominalPendapatan < 1000 && nominalPendapatanInput.length <= 3) { 
-                nominalPendapatan *= 1000;
+            if (nominalTransaksiInput.indexOf('.') === -1 && nominalTransaksi < 1000 && nominalTransaksiInput.length <= 3) { 
+                nominalTransaksi *= 1000;
             }
 
             let profitPercentageLaba = parseFloat(profitPercentageLabaInput);
@@ -1264,35 +1351,44 @@
                 return;
             }
 
-            const calculatedLaba = (nominalPendapatan * (profitPercentageLaba / 100));
+            const discountPercentageInput = document.getElementById('discountPercentageTransaksi').value;
+            let discountPercentage = parseFloat(discountPercentageInput);
+            if (isNaN(discountPercentage) || discountPercentage < 0 || discountPercentage > 100) {
+                alert('Persentase Diskon harus antara 0-100!');
+                return;
+            }
+
+            const effectivePercentage = profitPercentageLaba - discountPercentage;
+            const calculatedLaba = nominalTransaksi * (effectivePercentage / 100);
+
             const roundedLaba = roundToThousands(calculatedLaba); 
 
             const newTransaction = {
                 date: new Date(dateInput),
                 type: 'omzet', 
                 productName: namaBarangInput || '-',
-                description: `Laba dari ${namaBarangInput ? namaBarangInput + ' ' : ''}${formatCurrency(nominalPendapatan)} (${profitPercentageLaba}%)`, 
+                description: `Laba dari ${namaBarangInput ? namaBarangInput + ' ' : ''}${formatCurrency(nominalTransaksi)} (${profitPercentageLaba}%)`, 
                 amount: roundedLaba, 
-                originalNominal: nominalPendapatan, 
+                originalNominal: nominalTransaksi, 
                 profitPercentage: profitPercentageLaba 
             };
 
             transactions.push(newTransaction);
             saveTransactions();
             
-            document.getElementById('namaBarangPendapatan').value = '';
-            document.getElementById('nominalPendapatan').value = '';
-            document.getElementById('pendapatanDate').value = getTodayDateString(); 
+            document.getElementById('namaBarangTransaksi').value = '';
+            document.getElementById('nominalTransaksi').value = '';
+            document.getElementById('transaksiDate').value = getTodayDateString(); 
 
             displayTransactionsByType('omzet'); 
             if (currentUserRole === 'admin') { 
                 updateLabaSummary(); 
-                updatePendapatanKotorSummary(); 
+                updateTransaksiKotorSummary(); 
                 calculateFinancials(); 
                 renderMonthlyChart(); 
             }
             updateSidebarDailySummary(); 
-            alert('Pendapatan berhasil ditambahkan!');
+            alert('Transaksi berhasil ditambahkan!');
         }
 
         function addTransaction(type) { 
@@ -1355,7 +1451,8 @@
 
         function deleteTransaction(transactionType, displayIndex, currentList) {
             const enteredPassword = prompt('Masukkan kata sandi untuk menghapus:');
-            if (enteredPassword !== MASTER_PASSWORD) { 
+            const requiredPassword = currentUserRole === 'admin' ? MASTER_PASSWORD : ADMIN_PASSWORD;
+            if (enteredPassword !== requiredPassword) {
                 alert('Kata sandi salah. Penghapusan dibatalkan.');
                 return;
             }
@@ -1381,7 +1478,7 @@
                     displayTransactionsByType('omzet');
                     if (currentUserRole === 'admin') {
                         updateLabaSummary(); 
-                        updatePendapatanKotorSummary(); 
+                        updateTransaksiKotorSummary(); 
                     }
                 } else if (transactionType === 'pengeluaran') {
                     displayTransactionsByType('pengeluaran');
@@ -1405,7 +1502,7 @@
             let displayList;
 
             if (type === 'omzet') { 
-                tableBody = document.querySelector('#pendapatanTable tbody');
+                tableBody = document.querySelector('#transaksiTable tbody');
                 displayList = filteredTransactions || transactions.filter(t => t.type === 'omzet');
             } else if (type === 'pengeluaran') {
                 tableBody = document.querySelector('#pengeluaranTable tbody');
@@ -1422,7 +1519,7 @@
                 if (type === 'omzet') cell.colSpan = 6; 
                 else if (type === 'pengeluaran') cell.colSpan = 4;
                 
-                cell.textContent = `Tidak ada ${type === 'omzet' ? 'data pendapatan' : 'data pengeluaran'} ditemukan.`;
+                cell.textContent = `Tidak ada ${type === 'omzet' ? 'data transaksi' : 'data pengeluaran'} ditemukan.`;
                 cell.style.textAlign = "center";
                 return;
             }
@@ -1455,8 +1552,8 @@
             let targetTableType = type;
 
             if (type === 'omzet') {
-                startDateInput = document.getElementById('searchPendapatanStartDate');
-                endDateInput = document.getElementById('searchPendapatanEndDate');
+                startDateInput = document.getElementById('searchTransaksiStartDate');
+                endDateInput = document.getElementById('searchTransaksiEndDate');
             } else if (type === 'pengeluaran') {
                 startDateInput = document.getElementById('searchPengeluaranStartDate');
                 endDateInput = document.getElementById('searchPengeluaranEndDate');
@@ -1481,13 +1578,13 @@
             displayTransactionsByType(targetTableType, filtered);
         }
 
-        // --- Fungsi Filter Pendapatan Kotor ---
+        // --- Fungsi Filter Transaksi Kotor ---
         function filterGrossIncome() {
             const startDateStr = document.getElementById('grossIncomeStartDate').value;
             const endDateStr = document.getElementById('grossIncomeEndDate').value;
 
             if (!startDateStr || !endDateStr) {
-                alert('Silakan masukkan Tanggal Mulai dan Tanggal Akhir untuk filter pendapatan kotor.');
+                alert('Silakan masukkan Tanggal Mulai dan Tanggal Akhir untuk filter transaksi kotor.');
                 return;
             }
 
@@ -1596,8 +1693,8 @@
             document.getElementById('totalLabaKeseluruhan').textContent = formatCurrency(totalLabaKeseluruhan);
         }
 
-        // --- Fungsi Rincian Pendapatan Kotor ---
-        function updatePendapatanKotorSummary() {
+        // --- Fungsi Rincian Transaksi Kotor ---
+        function updateTransaksiKotorSummary() {
             if (currentUserRole !== 'admin') return; 
 
             const today = new Date();
@@ -1607,28 +1704,28 @@
             const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
             lastDayOfMonth.setHours(23, 59, 59, 999); 
 
-            let pendapatanKotorHariIni = 0;
-            let pendapatanKotorBulanIni = 0;
-            let totalPendapatanKotorKeseluruhan = 0;
+            let transaksiKotorHariIni = 0;
+            let transaksiKotorBulanIni = 0;
+            let totalTransaksiKotorKeseluruhan = 0;
 
             transactions.filter(t => t.type === 'omzet').forEach(t => {
                 const transactionDate = new Date(t.date);
                 transactionDate.setHours(0, 0, 0, 0); 
 
-                totalPendapatanKotorKeseluruhan += t.originalNominal; 
+                totalTransaksiKotorKeseluruhan += t.originalNominal; 
 
                 if (transactionDate.getTime() === today.getTime()) {
-                    pendapatanKotorHariIni += t.originalNominal;
+                    transaksiKotorHariIni += t.originalNominal;
                 }
 
                 if (transactionDate >= firstDayOfMonth && transactionDate <= lastDayOfMonth) {
-                    pendapatanKotorBulanIni += t.originalNominal;
+                    transaksiKotorBulanIni += t.originalNominal;
                 }
             });
 
-            document.getElementById('pendapatanKotorHariIni').textContent = formatCurrency(pendapatanKotorHariIni);
-            document.getElementById('pendapatanKotorBulanIni').textContent = formatCurrency(pendapatanKotorBulanIni);
-            document.getElementById('totalPendapatanKotorKeseluruhan').textContent = formatCurrency(totalPendapatanKotorKeseluruhan);
+            document.getElementById('transaksiKotorHariIni').textContent = formatCurrency(transaksiKotorHariIni);
+            document.getElementById('transaksiKotorBulanIni').textContent = formatCurrency(transaksiKotorBulanIni);
+            document.getElementById('totalTransaksiKotorKeseluruhan').textContent = formatCurrency(totalTransaksiKotorKeseluruhan);
         }
 
         // --- Fungsi Rincian Pengeluaran ---
@@ -1671,7 +1768,7 @@
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
-            let pendapatanKotorHarian = 0;
+            let transaksiKotorHarian = 0;
             let labaHarian = 0;
             let pengeluaranHarian = 0;
 
@@ -1681,7 +1778,7 @@
 
                 if (transactionDate.getTime() === today.getTime()) {
                     if (t.type === 'omzet') {
-                        pendapatanKotorHarian += t.originalNominal;
+                        transaksiKotorHarian += t.originalNominal;
                         labaHarian += t.amount;
                     } else if (t.type === 'pengeluaran') {
                         pengeluaranHarian += t.amount;
@@ -1689,7 +1786,7 @@
                 }
             });
 
-            document.getElementById('sidebarPendapatanKotorHariIni').textContent = formatCurrency(pendapatanKotorHarian);
+            document.getElementById('sidebarTransaksiKotorHariIni').textContent = formatCurrency(transaksiKotorHarian);
             document.getElementById('sidebarLabaHariIni').textContent = formatCurrency(labaHarian);
             document.getElementById('sidebarPengeluaranHariIni').textContent = formatCurrency(pengeluaranHarian);
         }
@@ -1862,7 +1959,8 @@
 
         function deleteSellingPriceCalculation(index) {
             const enteredPassword = prompt('Masukkan kata sandi untuk menghapus:');
-            if (enteredPassword !== MASTER_PASSWORD) { 
+            const requiredPassword = currentUserRole === 'admin' ? MASTER_PASSWORD : ADMIN_PASSWORD;
+            if (enteredPassword !== requiredPassword) {
                 alert('Kata sandi salah. Penghapusan dibatalkan.');
                 return;
             }
@@ -1948,7 +2046,7 @@
                     labels: labels,
                     datasets: [
                         {
-                            label: 'Pendapatan Kotor',
+                            label: 'Transaksi Kotor',
                             data: grossIncomeData,
                             backgroundColor: grossIncomeColor, 
                             borderColor: grossIncomeColor.replace('0.7', '1'),
@@ -2068,8 +2166,22 @@
                     if (currentUserRole === 'admin') {
                         showPage(pageId); // Admin bisa ke semua halaman
                     } else if (currentUserRole === 'cashier') {
-                        // Kasir hanya bisa ke 'pendapatan' atau 'pengeluaran'
-                        if (pageId === 'pendapatan' || pageId === 'pengeluaran') {
+                            // Untuk kasir, hanya menu Transaksi yang ditampilkan
+    document.querySelectorAll('#mainMenu li').forEach(el => {
+        if (el.id !== 'menuTransaksi') {
+            el.style.display = 'none';
+        }
+    });
+
+                // Untuk kasir, hanya menu Transaksi yang terlihat
+                document.querySelectorAll('#mainMenu li').forEach(el => {
+                    if (el.id !== 'menuTransaksi') {
+                        el.style.display = 'none';
+                    }
+                });
+
+                        // Kasir hanya bisa ke 'transaksi' atau 'pengeluaran'
+                        if (pageId === 'transaksi' || pageId === 'pengeluaran') {
                             showPage(pageId);
                         } else {
                             alert('Anda tidak memiliki akses ke menu ini.');
@@ -2091,7 +2203,7 @@
                 });
             });
 
-            const profitCalcInputs = document.querySelectorAll('#pendapatan input:not([type="date"])'); 
+            const profitCalcInputs = document.querySelectorAll('#transaksi input:not([type="date"])'); 
             profitCalcInputs.forEach(input => {
                 input.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
@@ -2119,7 +2231,7 @@
             
             // Panggil showPage() untuk menampilkan halaman default setelah semua setup selesai
             if (currentUserRole === 'admin' || currentUserRole === 'cashier') {
-                showPage('pendapatan');
+                showPage('transaksi');
             }
         }
 
@@ -2127,10 +2239,30 @@
         document.addEventListener('DOMContentLoaded', (event) => {
             loadTheme(); 
 
-            // Tampilkan overlay login saat halaman dimuat
-            document.getElementById('loginOverlay').style.display = 'flex';
-            document.getElementById('passwordInput').focus(); 
-            document.body.style.overflow = 'hidden'; 
+            // Periksa apakah pengguna sudah login sebelumnya
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const savedUserRole = localStorage.getItem('userRole');
+            
+            if (isLoggedIn && (savedUserRole === 'admin' || savedUserRole === 'cashier')) {
+                // Jika sudah login, langsung masuk ke aplikasi
+                currentUserRole = savedUserRole;
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.body.style.overflow = 'auto';
+                initializeUIForRole();
+        if (currentUserRole === 'cashier') {
+            const profitGroup = document.querySelector('label[for="profitPercentageLaba"]')?.parentElement;
+            if (profitGroup) {
+                profitGroup.style.display = 'none';
+            }
+        }
+
+                initializeApp();
+            } else {
+                // Jika belum login, tampilkan overlay login
+                document.getElementById('loginOverlay').style.display = 'flex';
+                document.getElementById('passwordInput').focus(); 
+                document.body.style.overflow = 'hidden'; 
+            }
 
             // Event listener untuk tombol Enter di input password
             document.getElementById('passwordInput').addEventListener('keypress', function(e) {
