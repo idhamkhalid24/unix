@@ -8,12 +8,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chart.js for graphs in financial report -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- FontAwesome for copy icon -->
+    <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
             background-color: #e2e8f0; /* Light gray background for the whole page */
+            transition: background-color 0.3s ease; /* Transisi untuk mode gelap/terang */
+            position: relative; /* Needed for absolute positioning of dark mode button */
         }
         /* Custom styles for rounded corners on all elements */
         .rounded-xl, .rounded-lg, .rounded-md {
@@ -63,35 +65,81 @@
             background-color: #357ABD; /* Darker Blue */
         }
         /* Styles for active/inactive tabs */
-        /* Updated tab-button classes for different colors and spacing */
-/* Styles for active/inactive tabs */
-.tab-button {
-    /* Hapus mr-2 di sini, akan menggunakan gap pada parent */
-    @apply px-4 py-2 text-sm font-semibold rounded-t-lg;
-    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out; /* Tambahkan transisi */
-}
+        .tab-button {
+            @apply px-4 py-2 text-sm font-semibold rounded-t-lg;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out; /* Add transition */
+        }
 
-/* Modifikasi parent div untuk menambahkan gap */
-/* Cari div ini: <div class="flex mb-4 border-b border-gray-200"> */
-/* Tambahkan class Tailwind CSS seperti 'gap-4' atau 'gap-6' */
-/* Contoh: <div class="flex gap-6 mb-4 border-b border-gray-200"> */
+        .tab-button.active-cashier {
+            @apply bg-blue-600 text-white;
+        }
+        .tab-button.inactive-cashier {
+            @apply bg-transparent text-blue-800 hover:bg-blue-100 hover:border-b-2 hover:border-blue-600;
+        }
+        .tab-button.active-custom-cashier {
+            @apply bg-red-600 text-white;
+        }
+        .tab-button.inactive-custom-cashier {
+            @apply bg-transparent text-red-800 hover:bg-red-100 hover:border-b-2 hover:border-red-600;
+        }
 
-.tab-button.active-cashier {
-    /* Mengubah warna latar belakang aktif menjadi biru */
-    @apply bg-blue-600 text-white;
-}
-.tab-button.inactive-cashier {
-    /* Latar belakang transparan, teks biru, border bawah saat hover */
-    @apply bg-transparent text-blue-800 hover:bg-blue-100 hover:border-b-2 hover:border-blue-600;
-}
-.tab-button.active-custom-cashier {
-    /* Mengubah warna latar belakang aktif menjadi merah */
-    @apply bg-red-600 text-white;
-}
-.tab-button.inactive-custom-cashier {
-    /* Latar belakang transparan, teks merah, border bawah saat hover */
-    @apply bg-transparent text-red-800 hover:bg-red-100 hover:border-b-2 hover:border-red-600;
-}
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #1a202c; /* Dark background */
+            color: #e2e8f0; /* Light text */
+        }
+        .dark-mode #login-screen .bg-white,
+        .dark-mode #main-app-container .bg-gray-50,
+        .dark-mode #main-app-container main .bg-gray-50,
+        .dark-mode .bg-gray-50,
+        .dark-mode .bg-white,
+        .dark-mode .modal-content, /* Untuk semua modal */
+        .dark-mode .bg-gray-100 { /* Untuk input di login/modal */
+            background-color: #2d3748; /* Darker shades for elements */
+            color: #e2e8f0;
+        }
+        .dark-mode #login-screen input,
+        .dark-mode #main-app-container input,
+        .dark-mode #main-app-container select,
+        .dark-mode .border-gray-300,
+        .dark-mode .border-gray-200 {
+            border-color: #4a5568;
+            background-color: #4a5568; /* Darker input backgrounds */
+            color: #e2e8f0;
+        }
+        .dark-mode .text-gray-700,
+        .dark-mode .text-gray-800,
+        .dark-mode .text-gray-900 {
+            color: #e2e8f0;
+        }
+        .dark-mode .text-gray-500 {
+            color: #a0aec0;
+        }
+        .dark-mode #main-app-container header .bg-green-600 {
+            background-color: #2f855a; /* Darker green for header */
+        }
+        .dark-mode #admin-menu-toggle {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+        .dark-mode #admin-menu-dropdown {
+            background-color: #2d3748;
+            border-color: #4a5568;
+        }
+        .dark-mode #admin-menu-dropdown button {
+            color: #e2e8f0;
+        }
+        .dark-mode #admin-menu-dropdown button:hover {
+            background-color: #4a5568;
+        }
+        /* Specific dark mode adjustments for elements with shadows */
+        .dark-mode .shadow-lg, .dark-mode .shadow-md, .dark-mode .shadow-sm {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        }
+        .dark-mode .bg-gray-100 { /* For read-only/disabled inputs */
+            background-color: #4a5568;
+        }
     </style>
 </head>
 <body class="p-4 lg:p-8 flex items-center justify-center min-h-screen">
@@ -118,6 +166,11 @@
         </div>
     </div>
 
+    <!-- Toggle Dark/Light Mode Button - Moved outside main-app-container -->
+    <button id="toggle-dark-mode" class="fixed top-4 right-4 text-gray-600 dark:text-white hover:text-gray-800 dark:hover:text-gray-200 focus:outline-none text-xl z-50">
+        <i class="fas fa-lightbulb"></i>
+    </button>
+
     <!-- Main Application Container -->
     <div id="main-app-container" class="container mx-auto p-4 lg:p-8 bg-gray-50 rounded-xl shadow-lg my-8 flex flex-col hidden">
         <header class="flex flex-col lg:flex-row justify-between items-center bg-green-600 text-white p-6 rounded-t-lg shadow-md relative">
@@ -127,8 +180,12 @@
                     <span id="cashier-name" class="block">Kasir: Nama Kasir</span>
                     <span id="current-date" class="block">Tanggal: 17 Juni 2025</span>
                 </div>
-                <div class="text-right text-xl font-bold mt-2 lg:mt-0 lg:ml-auto">
+                <!-- Eye Icon for Hiding/Showing Today's Sales - Moved next to RP -->
+                <div class="text-right text-xl font-bold mt-2 lg:mt-0 lg:ml-auto flex items-center gap-2">
                     <span id="today-sales-main-screen" class="block text-3xl">Rp 0</span>
+                    <button id="toggle-sales-visibility" class="text-white hover:text-gray-200 focus:outline-none text-xl">
+                        <i class="fas fa-eye"></i>
+                    </button>
                 </div>
                 <nav class="mt-4 lg:mt-0 flex gap-4">
                     <button id="open-transaction-history-modal-btn"
@@ -745,22 +802,22 @@
 
     <!-- JavaScript Logic -->
     <script type="module">
-        // Pastikan semua elemen DOM dimuat sebelum menjalankan skrip
+        // Ensure all DOM elements are loaded before running the script
         document.addEventListener('DOMContentLoaded', async function() {
-            // === Inisialisasi Firebase (jika berlaku, tetapi untuk demo ini, kami hanya menggunakan localStorage) ===
-            // Pastikan variabel global __app_id, __firebase_config, dan __initial_auth_token didefinisikan jika menggunakan Firebase
+            // === Firebase Initialization (if applicable, but for this demo, we only use localStorage) ===
+            // Ensure global variables __app_id, __firebase_config, and __initial_auth_token are defined if using Firebase
             // const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
             // const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
 
             // let app = null;
             // let db = null;
             // let auth = null;
-            // let isAuthReady = false; // Status siap otentikasi
+            // let isAuthReady = false; // Authentication ready status
 
-            let userId = null; // Disimpan secara lokal untuk konsistensi
-            let loggedInUser = null; // Objek pengguna kami dari localStorage (username, role)
+            let userId = null; // Stored locally for consistency
+            let loggedInUser = null; // Our user object from localStorage (username, role)
 
-            // === Referensi ke elemen UI utama ===
+            // === References to main UI elements ===
             const loginScreen = document.getElementById('login-screen');
             const mainAppContainer = document.getElementById('main-app-container');
             const cashierNameSpan = document.getElementById('cashier-name');
@@ -770,13 +827,13 @@
             const adminMenuContainer = document.getElementById('admin-menu-container');
             const logoutBtn = document.getElementById('logout-btn');
 
-            // Elemen Layar Login
+            // Login Screen Elements
             const loginUsernameInput = document.getElementById('login-username');
             const loginPasswordInput = document.getElementById('login-password');
             const loginBtn = document.getElementById('login-btn');
             const loginMessage = document.getElementById('login-message');
 
-            // Elemen Modal Pengaturan Pengguna
+            // User Settings Modal Elements
             const openUserSettingsModalBtn = document.getElementById('open-user-settings-modal-btn');
             const userSettingsModal = document.getElementById('user-settings-modal');
             const closeUserSettingsModalBtn = document.getElementById('close-user-settings-modal-btn');
@@ -787,18 +844,18 @@
             const addUserBtn = document.getElementById('add-user-btn');
             const userSettingsMessageBox = document.getElementById('user-settings-message-box');
 
-            // Elemen Ekspor/Impor Data Aplikasi Lengkap
+            // Full Application Data Export/Import Elements
             const exportDataBtn = document.getElementById('export-data-btn');
             const importDataBtn = document.getElementById('import-data-btn');
             const importFileInput = document.getElementById('import-file-input');
 
-            // Elemen Ekspor/Impor Produk Saja (BARU)
+            // Product Only Export/Import Elements (NEW)
             const exportProductsBtn = document.getElementById('export-products-btn');
             const importProductsBtn = document.getElementById('import-products-btn');
             const importProductsFileInput = document.getElementById('import-products-file-input');
 
 
-            // Elemen Modal Kalkulator Harga
+            // Price Calculator Modal Elements
             const openPriceCalculatorBtn = document.getElementById('open-price-calculator-btn');
             const priceCalculatorModal = document.getElementById('price-calculator-modal');
             const closePriceCalculatorModalBtn = document.getElementById('close-price-calculator-modal-btn');
@@ -810,14 +867,14 @@
             const calculatedSellPriceDisplay = document.getElementById('calculated-sell-price-display');
             const calculatedProfitDisplay = document.getElementById('calculated-profit-display');
             const priceCalculatorMessageBox = document.getElementById('price-calculator-message-box');
-            // Tombol salin untuk Kalkulator Harga
+            // Copy buttons for Price Calculator
             const copyProductCodeCalcBtn = document.getElementById('copy-product-code-calc');
             const copyCalculatedSellPriceBtn = document.getElementById('copy-calculated-sell-price');
 
 
-            // Elemen aplikasi yang sudah ada
+            // Existing application elements
             const currentDateSpan = document.getElementById('current-date');
-            const addProductToCartBtn = document.getElementById('add-to-cart-btn-registered'); // Diperbarui untuk produk terdaftar
+            const addProductToCartBtn = document.getElementById('add-to-cart-btn-registered'); // Updated for registered products
             const processPaymentBtn = document.getElementById('process-payment-btn');
             const clearCartBtn = document.getElementById('clear-cart-btn');
             const paymentModal = document.getElementById('payment-modal');
@@ -839,7 +896,7 @@
             const applyTransactionFilterBtn = document.getElementById('apply-transaction-filter-btn');
             const clearTransactionFilterBtn = document.getElementById('clear-transaction-filter-btn');
 
-            // Elemen Modal Detail Transaksi
+            // Transaction Detail Modal Elements
             const transactionDetailModal = document.getElementById('transaction-detail-modal');
             const closeTransactionDetailModalBtn = document.getElementById('close-transaction-detail-modal-btn');
             const detailTransactionId = document.getElementById('detail-transaction-id');
@@ -851,12 +908,12 @@
             const transactionDetailMessageBox = document.getElementById('transaction-detail-message-box');
 
 
-            // Elemen keranjang
+            // Cart elements
             const cartItemsContainer = document.getElementById('cart-items');
             const emptyCartMessage = document.getElementById('empty-cart-message');
             const cartSubtotalSpan = document.getElementById('cart-subtotal');
 
-            // === Elemen Modal Pengeluaran ===
+            // === Expenses Modal Elements ===
             const openExpensesModalBtn = document.getElementById('open-expenses-modal-btn');
             const expensesModal = document.getElementById('expenses-modal');
             const closeExpensesModalBtn = document.getElementById('close-expenses-modal-btn');
@@ -872,7 +929,7 @@
             const clearExpensesFilterBtn = document.getElementById('clear-expenses-filter-btn');
             const expensesMessageBox = document.getElementById('expenses-message-box');
 
-            // === Elemen Modal Tambah Produk ===
+            // === Add Product Modal Elements ===
             const openAddProductModalBtn = document.getElementById('open-add-product-modal-btn');
             const addProductModal = document.getElementById('add-product-modal');
             const closeAddProductModalBtn = document.getElementById('close-add-product-modal-btn');
@@ -880,12 +937,12 @@
             const newProductNameInput = document.getElementById('new-product-name');
             const newProductPriceInput = document.getElementById('new-product-price');
             const newProductCostInput = document.getElementById('new-product-cost');
-            // Input untuk stok produk baru
+            // Input for new product stock
             const newProductStockInput = document.getElementById('new-product-stock');
             const addNewProductBtn = document.getElementById('add-new-product-btn');
             const addProductMessageBox = document.getElementById('add-product-message-box');
 
-            // === Elemen Modal Produk Toko ===
+            // === Store Products Modal Elements ===
             const openStoreProductsModalBtn = document.getElementById('open-store-products-modal-btn');
             const storeProductsModal = document.getElementById('store-products-modal');
             const closeStoreProductsModalBtn = document.getElementById('close-store-products-modal-btn');
@@ -896,19 +953,19 @@
             const clearStoreProductsFilterBtn = document.getElementById('clear-store-products-filter-btn');
             const storeProductsMessageBox = document.getElementById('store-products-message-box');
 
-            // === Elemen Modal Edit Produk ===
+            // === Edit Product Modal Elements ===
             const editProductModal = document.getElementById('edit-product-modal');
             const closeEditProductModalBtn = document.getElementById('close-edit-product-modal-btn');
             const editProductCodeInput = document.getElementById('edit-product-code');
             const editProductNameInput = document.getElementById('edit-product-name');
             const editProductPriceInput = document.getElementById('edit-product-price');
             const editProductCostInput = document.getElementById('edit-product-cost');
-            // Input untuk mengedit stok produk
+            // Input for editing product stock
             const editProductStockInput = document.getElementById('edit-product-stock');
             const saveEditedProductBtn = document.getElementById('save-edited-product-btn');
             const editProductMessageBox = document.getElementById('edit-product-message-box');
 
-            // === Elemen Modal Laporan Keuangan ===
+            // === Financial Report Modal Elements ===
             const openFinancialReportModalBtn = document.getElementById('open-financial-report-modal-btn');
             const financialReportModal = document.getElementById('financial-report-modal');
             const closeFinancialReportModalBtn = document.getElementById('close-financial-report-modal-btn');
@@ -923,49 +980,49 @@
             const financialChartCanvas = document.getElementById('financial-chart');
             const financialReportMessageBox = document.getElementById('financial-report-message-box');
 
-            let financialChartInstance = null; // Untuk menyimpan instance Chart.js
+            let financialChartInstance = null; // To store Chart.js instance
 
-            let cart = []; // Array untuk menyimpan produk dalam transaksi saat ini
+            let cart = []; // Array to store products in the current transaction
 
-            // --- Manajemen Data Local Storage ---
+            // --- Local Storage Data Management ---
             let transactionsHistory = JSON.parse(localStorage.getItem('transactionsHistory')) || [];
             let appUsers = JSON.parse(localStorage.getItem('appUsers')) || [];
-            let appExpenses = JSON.parse(localStorage.getItem('appExpenses')) || []; // Data pengeluaran
-            // Diperbarui: Data produk sekarang mencakup properti 'stock'
-            let products = JSON.parse(localStorage.getItem('products')) || {}; // Data produk (sekarang dimulai kosong secara default)
-            let calculatedProductCodes = JSON.parse(localStorage.getItem('calculatedProductCodes')) || []; // Simpan kode produk yang dihitung
+            let appExpenses = JSON.parse(localStorage.getItem('appExpenses')) || []; // Expenses data
+            // Updated: Product data now includes 'stock' property
+            let products = JSON.parse(localStorage.getItem('products')) || {}; // Product data (now starts empty by default)
+            let calculatedProductCodes = JSON.parse(localStorage.getItem('calculatedProductCodes')) || []; // Store calculated product codes
 
-            // Inisialisasi pengguna admin/kasir default jika tidak ada
+            // Initialize default admin/cashier users if none exist
             if (appUsers.length === 0) {
                 appUsers = [
                     { id: 'admin1', username: 'admin', password: 'adminpass', role: 'admin' },
                     { id: 'kasir1', username: 'kasir', password: 'kasirpass', role: 'kasir' }
                 ];
                 localStorage.setItem('appUsers', JSON.stringify(appUsers));
-                console.log("Pengguna default diinisialisasi:", appUsers);
+                console.log("Default users initialized:", appUsers);
             } else {
-                console.log("Pengguna dimuat dari localStorage:", appUsers);
+                console.log("Users loaded from localStorage:", appUsers);
             }
 
-            // Simpan produk awal ke localStorage jika belum ada (atau jika baru diinisialisasi kosong)
-            // Ini memastikan jika 'products' kosong di localStorage, itu akan tetap kosong sampai produk ditambahkan.
+            // Save initial products to localStorage if not already present (or if newly initialized empty)
+            // This ensures if 'products' is empty in localStorage, it remains empty until products are added.
             if (!localStorage.getItem('products')) {
                 localStorage.setItem('products', JSON.stringify(products));
-                console.log("Produk diinisialisasi dan disimpan ke localStorage (mungkin kosong).");
+                console.log("Products initialized and saved to localStorage (possibly empty).");
             } else {
-                console.log("Produk dimuat dari localStorage:", products);
+                console.log("Products loaded from localStorage:", products);
             }
 
-            // Simpan calculatedProductCodes awal ke localStorage jika belum ada
+            // Save initial calculatedProductCodes to localStorage if not already present
             if (!localStorage.getItem('calculatedProductCodes')) {
                 localStorage.setItem('calculatedProductCodes', JSON.stringify(calculatedProductCodes));
-                console.log("Kode produk yang dihitung diinisialisasi dan disimpan ke localStorage (mungkin kosong).");
+                console.log("Calculated product codes initialized and saved to localStorage (possibly empty).");
             } else {
-                console.log("Kode produk yang dihitung dimuat dari localStorage:", calculatedProductCodes);
+                console.log("Calculated product codes loaded from localStorage:", calculatedProductCodes);
             }
 
 
-            // --- Elemen Modal Konfirmasi Kustom ---
+            // --- Custom Confirmation Modal Elements ---
             const confirmModal = document.createElement('div');
             confirmModal.id = 'custom-confirm-modal';
             confirmModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50';
@@ -983,7 +1040,7 @@
             const confirmMessage = document.getElementById('confirm-message');
             const confirmYesBtn = document.getElementById('confirm-yes-btn');
             const confirmNoBtn = document.getElementById('confirm-no-btn');
-            let confirmCallback = null; // Untuk menyimpan fungsi callback untuk konfirmasi
+            let confirmCallback = null; // To store the callback function for confirmation
 
             // === UI Elements for Product Input Tabs ===
             const tabRegisteredProductBtn = document.getElementById('tab-registered-product');
@@ -1005,43 +1062,62 @@
             const customQuantityInput = document.getElementById('custom-quantity');
             const addToCartCustomBtn = document.getElementById('add-to-cart-btn-custom');
 
+            // === New UI Elements for Visibility and Dark Mode ===
+            const toggleSalesVisibilityBtn = document.getElementById('toggle-sales-visibility');
+            const toggleSalesVisibilityIcon = toggleSalesVisibilityBtn.querySelector('i');
+            // The dark mode button is now outside the main app container.
+            const toggleDarkModeBtn = document.getElementById('toggle-dark-mode');
+            const toggleDarkModeIcon = toggleDarkModeBtn.querySelector('i');
 
-            // --- Manajemen Status UI ---
+            let isSalesVisible = true; // State for sales visibility
+            let isDarkMode = localStorage.getItem('darkMode') === 'true'; // State for dark mode, load from local storage
+
+            // Apply dark mode on initial load
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                toggleDarkModeIcon.classList.remove('fa-lightbulb');
+                toggleDarkModeIcon.classList.add('fa-sun'); // Change icon to sun in dark mode
+            } else {
+                toggleDarkModeIcon.classList.remove('fa-sun');
+                toggleDarkModeIcon.classList.add('fa-lightbulb'); // Change icon to lightbulb in light mode
+            }
+
+            // --- UI Status Management ---
             function showLoginScreen() {
                 loginScreen.classList.remove('hidden');
                 mainAppContainer.classList.add('hidden');
                 userSettingsModal.classList.add('hidden');
                 paymentModal.classList.add('hidden');
                 transactionHistoryModal.classList.add('hidden');
-                transactionDetailModal.classList.add('hidden'); // Sembunyikan modal detail transaksi
+                transactionDetailModal.classList.add('hidden'); // Hide transaction detail modal
                 priceCalculatorModal.classList.add('hidden');
                 expensesModal.classList.add('hidden');
-                addProductModal.classList.add('hidden'); // Sembunyikan modal tambah produk
-                storeProductsModal.classList.add('hidden'); // Sembunyikan modal produk toko
-                editProductModal.classList.add('hidden'); // Sembunyikan modal edit produk
+                addProductModal.classList.add('hidden'); // Hide add product modal
+                storeProductsModal.classList.add('hidden'); // Hide store products modal
+                editProductModal.classList.add('hidden'); // Hide edit product modal
                 financialReportModal.classList.add('hidden');
                 document.body.classList.remove('overflow-hidden');
-                loggedInUser = null; // Pastikan loggedInUser null saat menampilkan layar login
-                loginUsernameInput.value = ''; // Bersihkan input username
-                loginPasswordInput.value = ''; // Bersihkan input password
-                loginMessage.classList.add('hidden'); // Sembunyikan pesan login
+                loggedInUser = null; // Ensure loggedInUser is null when showing login screen
+                loginUsernameInput.value = ''; // Clear username input
+                loginPasswordInput.value = ''; // Clear password input
+                loginMessage.classList.add('hidden'); // Hide login message
             }
 
             function showMainApp() {
                 loginScreen.classList.add('hidden');
                 mainAppContainer.classList.remove('hidden');
-                // Sembunyikan menu admin jika bukan admin
+                // Hide admin menu if not admin
                 if (loggedInUser && loggedInUser.role === 'admin') {
                     adminMenuContainer.classList.remove('hidden');
-                    console.log("Menu Admin DITAMPILKAN untuk pengguna:", loggedInUser.username, "Peran:", loggedInUser.role);
+                    console.log("Admin Menu SHOWN for user:", loggedInUser.username, "Role:", loggedInUser.role);
                 } else {
                     adminMenuContainer.classList.add('hidden');
-                    console.log("Menu Admin DISEMBUNYIKAN untuk pengguna:", loggedInUser ? loggedInUser.username : 'Tidak Ada Pengguna', "Peran:", loggedInUser ? loggedInUser.role : 'N/A');
+                    console.log("Admin Menu HIDDEN for user:", loggedInUser ? loggedInUser.username : 'No User', "Role:", loggedInUser ? loggedInUser.role : 'N/A');
                 }
-                updateCurrentDate(); // Panggil untuk memperbarui tanggal
-                updateTodaySalesDisplay(); // Panggil untuk memperbarui penjualan hari ini
-                renderCart(); // Render keranjang saat aplikasi utama ditampilkan
-                showRegisteredProductTab(); // Tampilkan tab produk terdaftar secara default
+                updateCurrentDate(); // Call to update date
+                updateTodaySalesDisplay(); // Call to update today's sales
+                renderCart(); // Render cart when main app is displayed
+                showRegisteredProductTab(); // Show registered product tab by default
             }
 
             // Function to switch between product input tabs
@@ -1094,7 +1170,7 @@
                 }
                 setTimeout(() => {
                     messageBox.classList.add('hidden');
-                }, 3000); // Sembunyikan setelah 3 detik
+                }, 3000); // Hide after 3 seconds
             }
 
             function showUserSettingsMessage(message, type = 'info') {
@@ -1172,7 +1248,7 @@
                 }, 3000);
             }
 
-            // === Fungsi untuk Modal Laporan Keuangan ===
+            // === Functions for Financial Report Modal ===
             function showFinancialReportMessage(message, type = 'info') {
                 financialReportMessageBox.textContent = message;
                 financialReportMessageBox.classList.remove('hidden', 'bg-red-100', 'border-red-200', 'text-red-800', 'bg-green-100', 'border-green-200', 'text-green-800', 'bg-yellow-100', 'border-yellow-200', 'text-yellow-800');
@@ -1188,7 +1264,7 @@
                 }, 3000);
             }
 
-            // === Fungsi untuk Modal Edit Produk ===
+            // === Functions for Edit Product Modal ===
             function showEditProductMessage(message, type = 'info') {
                 editProductMessageBox.textContent = message;
                 editProductMessageBox.classList.remove('hidden', 'bg-red-100', 'border-red-200', 'text-red-800', 'bg-green-100', 'border-green-200', 'text-green-800', 'bg-yellow-100', 'border-yellow-200', 'text-yellow-800');
@@ -1204,7 +1280,7 @@
                 }, 3000);
             }
 
-            // === Fungsi untuk Modal Detail Transaksi ===
+            // === Functions for Transaction Detail Modal ===
             function showTransactionDetailMessage(message, type = 'info') {
                 transactionDetailMessageBox.textContent = message;
                 transactionDetailMessageBox.classList.remove('hidden', 'bg-red-100', 'border-red-200', 'text-red-800', 'bg-green-100', 'border-green-200', 'text-green-800', 'bg-yellow-100', 'border-yellow-200', 'text-yellow-800');
@@ -1229,7 +1305,7 @@
                 }).format(amount);
             }
 
-            // Fungsi untuk memperbarui tampilan tanggal saat ini
+            // Function to update the current date display
             function updateCurrentDate() {
                 const now = new Date();
                 const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -1260,7 +1336,7 @@
                 hideConfirmModal();
             });
 
-            // --- Logika Login (menggunakan localStorage) ---
+            // --- Login Logic (using localStorage) ---
             loginBtn.addEventListener('click', async () => {
                 const username = loginUsernameInput.value.trim();
                 const password = loginPasswordInput.value.trim();
@@ -1275,9 +1351,9 @@
                 const foundUser = appUsers.find(user => user.username === username && user.password === password);
 
                 if (foundUser) {
-                    loggedInUser = { ...foundUser }; // Salin data pengguna
-                    userId = foundUser.id; // Tetapkan userId lokal
-                    console.log("Login berhasil. Pengguna yang login:", loggedInUser);
+                    loggedInUser = { ...foundUser }; // Copy user data
+                    userId = foundUser.id; // Set local userId
+                    console.log("Login successful. Logged-in user:", loggedInUser);
                     cashierNameSpan.textContent = `Kasir: ${loggedInUser.username} (${loggedInUser.role})`;
                     showMainApp();
                 } else {
@@ -1286,17 +1362,17 @@
                 }
             });
 
-            // --- Logika Logout (menggunakan localStorage) ---
+            // --- Logout Logic (using localStorage) ---
             logoutBtn.addEventListener('click', async () => {
                 showConfirmModal('Apakah Anda yakin ingin logout?', async () => {
-                    loggedInUser = null; // Bersihkan status pengguna internal
-                    cart = []; // Bersihkan keranjang saat logout
-                    console.log("Pengguna telah logout.");
-                    showLoginScreen(); // Tampilkan layar login
+                    loggedInUser = null; // Clear internal user status
+                    cart = []; // Clear cart on logout
+                    console.log("User logged out.");
+                    showLoginScreen(); // Show login screen
                 });
             });
 
-            // --- Logika Modal Pengaturan Pengguna (menggunakan localStorage) ---
+            // --- User Settings Modal Logic (using localStorage) ---
             openUserSettingsModalBtn.addEventListener('click', () => {
                 if (!loggedInUser || loggedInUser.role !== 'admin') {
                     showMessage('Anda tidak memiliki hak akses untuk fitur ini.', 'error');
@@ -1344,34 +1420,34 @@
                     showUserSettingsMessage('Nama pengguna dan Kata Sandi tidak boleh kosong.', 'error');
                     return;
                 }
-                if (password.length < 3) { // Panjang kata sandi minimum untuk demo
+                if (password.length < 3) { // Minimum password length for demo
                     showUserSettingsMessage('Kata sandi harus minimal 3 karakter.', 'error');
                     return;
                 }
 
-                // Periksa apakah username sudah ada
+                // Check if username already exists
                 const existingUser = appUsers.find(user => user.username === username);
                 if (existingUser) {
                     showUserSettingsMessage('Nama pengguna sudah ada. Pilih nama lain.', 'error');
                     return;
                 }
 
-                const newUserId = 'user_' + Date.now(); // ID unik sederhana
+                const newUserId = 'user_' + Date.now(); // Simple unique ID
                 appUsers.push({ id: newUserId, username: username, password: password, role: role });
                 localStorage.setItem('appUsers', JSON.stringify(appUsers));
-                console.log("Pengguna ditambahkan. appUsers saat ini:", appUsers);
+                console.log("User added. Current appUsers:", appUsers);
 
                 showUserSettingsMessage('Pengguna berhasil ditambahkan!', 'success');
-                newUsernameInput.value = ''; // Bersihkan input
-                newPasswordInput.value = ''; // Bersihkan input password
-                newUserRoleSelect.value = 'kasir'; // Atur ulang dropdown
-                renderUserList(); // Render ulang daftar
+                newUsernameInput.value = ''; // Clear input
+                newPasswordInput.value = ''; // Clear password input
+                newUserRoleSelect.value = 'kasir'; // Reset dropdown
+                renderUserList(); // Re-render list
             });
 
             async function deleteUser(event) {
                 const userIdToDelete = event.target.dataset.id;
                 showConfirmModal(`Apakah Anda yakin ingin menghapus pengguna ini?`, async () => {
-                    // Mencegah penghapusan pengguna yang sedang login
+                    // Prevent deleting the currently logged-in user
                     if (loggedInUser && loggedInUser.id === userIdToDelete) {
                         showUserSettingsMessage('Tidak dapat menghapus pengguna yang sedang login.', 'error');
                         return;
@@ -1379,13 +1455,13 @@
 
                     appUsers = appUsers.filter(user => user.id !== userIdToDelete);
                     localStorage.setItem('appUsers', JSON.stringify(appUsers));
-                    console.log("Pengguna dihapus. appUsers saat ini:", appUsers);
+                    console.log("User deleted. Current appUsers:", appUsers);
                     showUserSettingsMessage('Pengguna berhasil dihapus!', 'success');
-                    renderUserList(); // Render ulang daftar
+                    renderUserList(); // Re-render list
                 });
             }
 
-            // --- Fungsi Ekspor/Impor Data Aplikasi Lengkap ---
+            // --- Full Application Data Export/Import Functions ---
             function exportData() {
                 if (!loggedInUser || loggedInUser.role !== 'admin') {
                     showMessage('Anda tidak memiliki hak akses untuk mengekspor data.', 'error');
@@ -1396,11 +1472,11 @@
                     const dataToExport = {
                         appUsers: appUsers,
                         transactionsHistory: transactionsHistory,
-                        appExpenses: appExpenses, // Sertakan data pengeluaran
-                        products: products, // Sertakan data produk
-                        calculatedProductCodes: calculatedProductCodes // Sertakan kode produk yang dihitung
+                        appExpenses: appExpenses, // Include expenses data
+                        products: products, // Include products data
+                        calculatedProductCodes: calculatedProductCodes // Include calculated product codes
                     };
-                    const dataStr = JSON.stringify(dataToExport, null, 2); // Cetak JSON dengan rapi
+                    const dataStr = JSON.stringify(dataToExport, null, 2); // Pretty print JSON
 
                     const blob = new Blob([dataStr], { type: 'application/json' });
                     const url = URL.createObjectURL(blob);
@@ -1420,7 +1496,7 @@
                     showMessage('Anda tidak memiliki hak akses untuk mengimpor data.', 'error');
                     return;
                 }
-                // Picu klik pada input file tersembunyi
+                // Trigger click on hidden file input
                 importFileInput.click();
             }
 
@@ -1445,60 +1521,60 @@
                             if (importedData.appUsers && Array.isArray(importedData.appUsers)) {
                                 appUsers = importedData.appUsers;
                                 localStorage.setItem('appUsers', JSON.stringify(appUsers));
-                                console.log('Pengguna berhasil diimpor.');
+                                console.log('Users imported successfully.');
                             } else {
-                                console.warn('Tidak ada appUsers yang valid ditemukan di file yang diimpor, melewati impor pengguna.');
+                                console.warn('No valid appUsers found in imported file, skipping user import.');
                             }
 
                             if (importedData.transactionsHistory && Array.isArray(importedData.transactionsHistory)) {
                                 transactionsHistory = importedData.transactionsHistory;
                                 localStorage.setItem('transactionsHistory', JSON.stringify(transactionsHistory));
-                                console.log('Transaksi berhasil diimpor.');
+                                console.log('Transactions imported successfully.');
                             } else {
-                                console.warn('Tidak ada transactionsHistory yang valid ditemukan di file yang diimpor, melewati impor transaksi.');
+                                console.warn('No valid transactionsHistory found in imported file, skipping transaction import.');
                             }
 
                             if (importedData.appExpenses && Array.isArray(importedData.appExpenses)) {
                                 appExpenses = importedData.appExpenses;
                                 localStorage.setItem('appExpenses', JSON.stringify(appExpenses));
-                                console.log('Pengeluaran berhasil diimpor.');
+                                console.log('Expenses imported successfully.');
                             } else {
-                                console.warn('Tidak ada appExpenses yang valid ditemukan di file yang diimpor, melewati impor pengeluaran.');
+                                console.warn('No valid appExpenses found in imported file, skipping expenses import.');
                             }
 
                             if (importedData.products && typeof importedData.products === 'object' && !Array.isArray(importedData.products)) {
                                 products = importedData.products;
-                                // Pastikan semua produk yang diimpor memiliki properti 'stock', default ke 0 jika tidak ada
+                                // Ensure all imported products have a 'stock' property, default to 0 if missing
                                 for (const code in products) {
                                     if (products.hasOwnProperty(code) && typeof products[code].stock === 'undefined') {
                                         products[code].stock = 0;
                                     }
                                 }
                                 localStorage.setItem('products', JSON.stringify(products));
-                                console.log('Produk berhasil diimpor.');
+                                console.log('Products imported successfully.');
                             } else {
-                                console.warn('Tidak ada produk yang valid ditemukan di file yang diimpor, melewati impor produk.');
+                                console.warn('No valid products found in imported file, skipping product import.');
                             }
 
-                            // Impor calculatedProductCodes
+                            // Import calculatedProductCodes
                             if (importedData.calculatedProductCodes && Array.isArray(importedData.calculatedProductCodes)) {
                                 calculatedProductCodes = importedData.calculatedProductCodes;
                                 localStorage.setItem('calculatedProductCodes', JSON.stringify(calculatedProductCodes));
-                                console.log('Kode produk yang dihitung berhasil diimpor.');
+                                console.log('Calculated product codes imported successfully.');
                             } else {
-                                console.warn('Tidak ada calculatedProductCodes yang valid ditemukan di file yang diimpor, melewati impor kode produk yang dihitung.');
+                                console.warn('No valid calculatedProductCodes found in imported file, skipping calculated product codes import.');
                             }
 
 
                             showMessage('Data berhasil diimpor dan diperbarui! Harap segarkan halaman untuk melihat perubahan.', 'success');
-                            renderUserList(); // Render ulang daftar pengguna
-                            renderTransactionHistory(); // Render ulang riwayat transaksi
-                            renderStoreProductsList(); // Perbarui daftar produk toko
-                            updateTodaySalesDisplay(); // Perbarui penjualan hari ini
-                            // Tidak perlu memanggil calculateFinancialSummaryAndRenderChart() di sini, itu akan dipanggil saat modal dibuka
+                            renderUserList(); // Re-render user list
+                            renderTransactionHistory(); // Re-render transaction history
+                            renderStoreProductsList(); // Update store products list
+                            updateTodaySalesDisplay(); // Update today sales
+                            // No need to call calculateFinancialSummaryAndRenderChart() here, it will be called when modal is opened
                         } catch (error) {
                             showMessage('Gagal mengurai file JSON. Pastikan format file benar.', 'error');
-                            console.error('Kesalahan saat mengimpor data:', error);
+                            console.error('Error importing data:', error);
                         }
                     };
                     reader.readAsText(file);
@@ -1506,7 +1582,7 @@
             });
 
 
-            // --- Fungsi Ekspor/Impor Produk Saja (BARU) ---
+            // --- Product Only Export/Import Functions (NEW) ---
             function exportProducts() {
                 if (!loggedInUser || loggedInUser.role !== 'admin') {
                     showMessage('Anda tidak memiliki hak akses untuk mengekspor produk.', 'error');
@@ -1567,20 +1643,20 @@
                             for (const code in importedProductsData) {
                                 if (importedProductsData.hasOwnProperty(code)) {
                                     const importedProduct = importedProductsData[code];
-                                    // Pastikan produk yang diimpor memiliki properti yang diperlukan
+                                    // Ensure imported product has necessary properties
                                     if (importedProduct.name && typeof importedProduct.price === 'number' && typeof importedProduct.cost === 'number') {
                                         if (products[code]) {
-                                            // Perbarui produk yang sudah ada
+                                            // Update existing product
                                             products[code] = {
                                                 name: importedProduct.name,
                                                 price: importedProduct.price,
                                                 cost: importedProduct.cost,
-                                                // Pastikan stok ada, jika tidak, default ke nilai yang ada atau 0
+                                                // Ensure stock exists, if not, default to existing value or 0
                                                 stock: typeof importedProduct.stock === 'number' ? importedProduct.stock : products[code].stock || 0
                                             };
                                             productsUpdated++;
                                         } else {
-                                            // Tambahkan produk baru
+                                            // Add new product
                                             products[code] = {
                                                 name: importedProduct.name,
                                                 price: importedProduct.price,
@@ -1590,18 +1666,18 @@
                                             productsAdded++;
                                         }
                                     } else {
-                                        console.warn(`Melewati produk dengan kode ${code} karena data tidak lengkap atau tidak valid.`, importedProduct);
+                                        console.warn(`Skipping product with code ${code} due to incomplete or invalid data.`, importedProduct);
                                     }
                                 }
                             }
 
                             localStorage.setItem('products', JSON.stringify(products));
-                            console.log('Produk setelah impor:', products);
-                            showStoreProductsMessage(`Impor produk selesai. Ditambahkan: ${productsAdded}, Diperbarui: ${productsUpdated}.`, 'success');
-                            renderStoreProductsList(); // Perbarui tampilan daftar produk
+                            console.log('Products after import:', products);
+                            showStoreProductsMessage(`Product import complete. Added: ${productsAdded}, Updated: ${productsUpdated}.`, 'success');
+                            renderStoreProductsList(); // Update product list display
                         } catch (error) {
                             showStoreProductsMessage('Gagal mengurai file JSON produk. Pastikan format file benar.', 'error');
-                            console.error('Kesalahan saat mengimpor produk:', error);
+                            console.error('Error importing products:', error);
                         }
                     };
                     reader.readAsText(file);
@@ -1609,7 +1685,7 @@
             });
 
 
-            // --- Fungsi Kalkulator Harga ---
+            // --- Price Calculator Functions ---
             function openPriceCalculatorModal() {
                 if (!loggedInUser || loggedInUser.role !== 'admin') {
                     showMessage('Anda tidak memiliki hak akses untuk fitur ini.', 'error');
@@ -1617,7 +1693,7 @@
                 }
                 priceCalculatorModal.classList.remove('hidden');
                 document.body.classList.add('overflow-hidden');
-                // Bersihkan nilai sebelumnya
+                // Clear previous values
                 productCodeCalcInput.value = '';
                 productNameCalcInput.value = '';
                 modalPriceCalcInput.value = '';
@@ -1642,8 +1718,8 @@
                     return;
                 }
 
-                // Periksa apakah kode produk sudah pernah dihitung sebelumnya dan belum dihapus dari produk toko
-                // Hanya peringatkan jika kode tidak ada di objek `products` (berarti bukan produk yang disimpan yang sedang dihitung ulang)
+                // Check if product code has been calculated before and not deleted from store products
+                // Only warn if code is not in `products` object (meaning it's not a stored product being re-calculated)
                 if (calculatedProductCodes.includes(code) && !products[code]) {
                     showPriceCalculatorMessage('Kode Barang ini sudah pernah dihitung sebelumnya dan belum dihapus dari daftar produk toko. Harap gunakan kode lain atau hapus produk ini dari daftar produk toko jika ingin menghitung ulang.', 'error');
                     calculatedSellPriceDisplay.textContent = formatCurrency(0);
@@ -1666,22 +1742,22 @@
                 }
 
                 const sellingPrice = modalPrice + (modalPrice * (marginPercent / 100));
-                const profit = sellingPrice - modalPrice; // Hitung keuntungan
+                const profit = sellingPrice - modalPrice; // Calculate profit
 
                 calculatedSellPriceDisplay.textContent = formatCurrency(sellingPrice);
                 calculatedProfitDisplay.textContent = formatCurrency(profit);
                 showPriceCalculatorMessage('Harga jual dan keuntungan berhasil dihitung!', 'success');
 
-                // Tambahkan kode produk yang dihitung ke daftar
+                // Add calculated product code to the list
                 if (!calculatedProductCodes.includes(code)) {
                     calculatedProductCodes.push(code);
                     localStorage.setItem('calculatedProductCodes', JSON.stringify(calculatedProductCodes));
                 }
             }
 
-            // --- Fungsi Salin ---
+            // --- Copy Functions ---
             function copyToClipboard(text, messageElement) {
-                // Gunakan elemen input sementara untuk menyalin teks
+                // Use a temporary input element to copy text
                 const tempInput = document.createElement('input');
                 tempInput.value = text;
                 document.body.appendChild(tempInput);
@@ -1695,15 +1771,15 @@
                     messageElement.textContent = 'Gagal menyalin.';
                     messageElement.classList.remove('hidden', 'bg-green-100', 'border-green-200', 'text-green-800', 'bg-yellow-100');
                     messageElement.classList.add('bg-red-100', 'border-red-200', 'text-red-800');
-                    console.error('Gagal menyalin: ', err);
+                    console.error('Failed to copy: ', err);
                 }
                 document.body.removeChild(tempInput);
                 setTimeout(() => {
                     messageElement.classList.add('hidden');
-                }, 1500); // Sembunyikan pesan "Disalin!" setelah 1.5 detik
+                }, 1500); // Hide "Copied!" message after 1.5 seconds
             }
 
-            // === Fungsi Modal Pengeluaran ===
+            // === Expenses Modal Functions ===
             function showExpensesModal() {
                 if (!loggedInUser || loggedInUser.role !== 'admin') {
                     showMessage('Anda tidak memiliki hak akses untuk fitur ini.', 'error');
@@ -1711,13 +1787,13 @@
                 }
                 expensesModal.classList.remove('hidden');
                 document.body.classList.add('overflow-hidden');
-                // Atur tanggal input ke tanggal saat ini secara default
+                // Set date input to current date by default
                 expenseDateInput.valueAsDate = new Date();
                 expenseAmountInput.value = '';
                 expenseDescriptionInput.value = '';
-                expensesDateFilterInput.value = ''; // Bersihkan filter saat dibuka
-                expensesSearchInput.value = ''; // Bersihkan filter saat dibuka
-                renderExpensesList(); // Tampilkan daftar pengeluaran terbaru
+                expensesDateFilterInput.value = ''; // Clear filter on open
+                expensesSearchInput.value = ''; // Clear filter on open
+                renderExpensesList(); // Display latest expenses list
             }
 
             function hideExpensesModal() {
@@ -1737,7 +1813,7 @@
 
                 const newExpense = {
                     id: 'EXP-' + Date.now(),
-                    date: date, // Formatablanca-MM-DD
+                    date: date, // Format YYYY-MM-DD
                     amount: amount,
                     description: description
                 };
@@ -1745,26 +1821,26 @@
                 appExpenses.push(newExpense);
                 localStorage.setItem('appExpenses', JSON.stringify(appExpenses));
                 showExpensesMessage('Pengeluaran berhasil ditambahkan!', 'success');
-                console.log('Pengeluaran ditambahkan:', newExpense);
+                console.log('Expense added:', newExpense);
 
-                // Bersihkan input
+                // Clear inputs
                 expenseAmountInput.value = '';
                 expenseDescriptionInput.value = '';
-                expenseDateInput.valueAsDate = new Date(); // Reset tanggal ke hari ini
+                expenseDateInput.valueAsDate = new Date(); // Reset date to today
 
-                renderExpensesList(); // Perbarui daftar pengeluaran
+                renderExpensesList(); // Update expenses list
             }
 
             function renderExpensesList(filterDate = null, searchTerm = '') {
                 expensesListBox.innerHTML = '';
                 let filteredExpenses = appExpenses;
 
-                // Filter berdasarkan tanggal
+                // Filter by date
                 if (filterDate) {
                     filteredExpenses = filteredExpenses.filter(exp => exp.date === filterDate);
                 }
 
-                // Filter berdasarkan deskripsi (tidak peka huruf besar/kecil)
+                // Filter by description (case-insensitive)
                 if (searchTerm) {
                     const lowerCaseSearchTerm = searchTerm.toLowerCase();
                     filteredExpenses = filteredExpenses.filter(exp =>
@@ -1776,7 +1852,7 @@
                     emptyExpensesMessage.classList.remove('hidden');
                 } else {
                     emptyExpensesMessage.classList.add('hidden');
-                    // Urutkan pengeluaran berdasarkan tanggal, terbaru dulu
+                    // Sort expenses by date, newest first
                     const sortedExpenses = [...filteredExpenses].sort((a, b) => new Date(b.date) - new Date(a.date));
 
                     sortedExpenses.forEach(expense => {
@@ -1803,13 +1879,13 @@
                     appExpenses = appExpenses.filter(exp => exp.id !== expenseIdToDelete);
                     localStorage.setItem('appExpenses', JSON.stringify(appExpenses));
                     showExpensesMessage('Pengeluaran berhasil dihapus!', 'info');
-                    renderExpensesList(expensesDateFilterInput.value, expensesSearchInput.value); // Render ulang dengan filter saat ini
-                    // Setelah menghapus pengeluaran, perbarui laporan keuangan juga
+                    renderExpensesList(expensesDateFilterInput.value, expensesSearchInput.value); // Re-render with current filters
+                    // After deleting an expense, update financial report too
                     calculateFinancialSummaryAndRenderChart();
                 });
             }
 
-            // === Fungsi Modal Tambah Produk Baru ===
+            // === Add New Product Modal Functions ===
             function showAddProductModal() {
                 if (!loggedInUser || loggedInUser.role !== 'admin') {
                     showMessage('Anda tidak memiliki hak akses untuk fitur ini.', 'error');
@@ -1817,12 +1893,12 @@
                 }
                 addProductModal.classList.remove('hidden');
                 document.body.classList.add('overflow-hidden');
-                // Bersihkan input saat membuka modal
+                // Clear inputs when opening modal
                 newProductCodeInput.value = '';
                 newProductNameInput.value = '';
                 newProductPriceInput.value = '';
                 newProductCostInput.value = '';
-                newProductStockInput.value = '0'; // Atur stok default ke 0
+                newProductStockInput.value = '0'; // Set default stock to 0
                 addProductMessageBox.classList.add('hidden');
             }
 
@@ -1836,9 +1912,9 @@
                 const name = newProductNameInput.value.trim();
                 const price = parseFloat(newProductPriceInput.value);
                 const cost = parseFloat(newProductCostInput.value);
-                const stock = parseInt(newProductStockInput.value); // Dapatkan nilai stok
+                const stock = parseInt(newProductStockInput.value); // Get stock value
 
-                // --- VALIDASI BIDANG WAJIB ---
+                // --- REQUIRED FIELD VALIDATION ---
                 if (!code) {
                     showAddProductMessage('Kode Produk wajib diisi.', 'error');
                     return;
@@ -1855,34 +1931,34 @@
                     showAddProductMessage('Harga Modal wajib diisi dan harus angka positif.', 'error');
                     return;
                 }
-                // Validasi Stok wajib diisi
+                // Stock validation is required
                 if (newProductStockInput.value.trim() === '' || isNaN(stock) || stock < 0) {
                     showAddProductMessage('Stok wajib diisi dan harus angka positif.', 'error');
                     return;
                 }
-                // --- AKHIR VALIDASI BIDANG WAJIB ---
+                // --- END REQUIRED FIELD VALIDATION ---
 
                 if (products[code]) {
                     showAddProductMessage('Kode produk sudah ada. Harap gunakan kode lain.', 'error');
                     return;
                 }
 
-                products[code] = { name: name, price: price, cost: cost, stock: stock }; // Sertakan stok
+                products[code] = { name: name, price: price, cost: cost, stock: stock }; // Include stock
                 localStorage.setItem('products', JSON.stringify(products));
-                showAddProductMessage(`Produk "${name}" dengan kode ${code} berhasil ditambahkan!`, 'success');
-                console.log('Produk baru ditambahkan:', products[code]);
+                showAddProductMessage(`Produk "${name}" with code ${code} berhasil ditambahkan!`, 'success');
+                console.log('New product added:', products[code]);
 
-                // Bersihkan input
+                // Clear inputs
                 newProductCodeInput.value = '';
                 newProductNameInput.value = '';
                 newProductPriceInput.value = '';
                 newProductCostInput.value = '';
-                newProductStockInput.value = '0'; // Reset input stok
+                newProductStockInput.value = '0'; // Reset stock input
 
-                renderStoreProductsList(); // Perbarui daftar produk toko setelah menambahkan produk baru
+                renderStoreProductsList(); // Update store products list after adding new product
             }
 
-            // === Fungsi Modal Produk Toko ===
+            // === Store Products Modal Functions ===
             function showStoreProductsModal() {
                 if (!loggedInUser || loggedInUser.role !== 'admin') {
                     showMessage('Anda tidak memiliki hak akses untuk fitur ini.', 'error');
@@ -1890,8 +1966,8 @@
                 }
                 storeProductsModal.classList.remove('hidden');
                 document.body.classList.add('overflow-hidden');
-                storeProductsSearchInput.value = ''; // Bersihkan filter saat dibuka
-                renderStoreProductsList(); // Tampilkan daftar produk
+                storeProductsSearchInput.value = ''; // Clear filter on open
+                renderStoreProductsList(); // Display product list
             }
 
             function hideStoreProductsModal() {
@@ -1901,10 +1977,10 @@
 
             function renderStoreProductsList(searchTerm = '') {
                 storeProductListBody.innerHTML = '';
-                const productEntries = Object.entries(products); // Dapatkan array [kunci, nilai] dari objek produk
+                const productEntries = Object.entries(products); // Get [key, value] array from products object
                 let filteredProducts = productEntries;
 
-                // Filter berdasarkan istilah pencarian (kode atau nama)
+                // Filter by search term (code or name)
                 if (searchTerm) {
                     const lowerCaseSearchTerm = searchTerm.toLowerCase();
                     filteredProducts = filteredProducts.filter(([code, product]) =>
@@ -1917,7 +1993,7 @@
                     emptyStoreProductMessage.classList.remove('hidden');
                 } else {
                     emptyStoreProductMessage.classList.add('hidden');
-                    // Urutkan produk berdasarkan kode
+                    // Sort products by code
                     const sortedProducts = [...filteredProducts].sort(([codeA], [codeB]) => codeA.localeCompare(codeB));
 
                     sortedProducts.forEach(([code, product]) => {
@@ -1927,7 +2003,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${product.name}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900">${formatCurrency(product.price)}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900">${formatCurrency(product.cost)}</td>
-                            <!-- Tampilkan Stok -->
+                            <!-- Display Stock -->
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900 ${product.stock === 0 ? 'text-red-500 font-bold' : ''}">${product.stock}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <button data-code="${code}" class="text-blue-600 hover:text-blue-900 edit-store-product-btn">Edit</button>
@@ -1941,10 +2017,10 @@
                             const productCode = e.target.dataset.code;
                             const productToEdit = products[productCode];
                             if (productToEdit) {
-                                // Lewati nilai stok ke modal edit
+                                // Pass stock value to edit modal
                                 showEditProductModal(productCode, productToEdit.name, productToEdit.price, productToEdit.cost, productToEdit.stock);
                             } else {
-                                showStoreProductsMessage('Produk tidak ditemukan untuk diedit.', 'error');
+                                showStoreProductsMessage('Product not found for editing.', 'error');
                             }
                         });
                     });
@@ -1956,24 +2032,24 @@
 
             async function deleteStoreProduct(event) {
                 const productCodeToDelete = event.target.dataset.code;
-                showConfirmModal(`Apakah Anda yakin ingin menghapus produk "${products[productCodeToDelete].name}" dengan kode ${productCodeToDelete}?`, async () => {
+                showConfirmModal(`Apakah Anda yakin ingin menghapus produk "${products[productCodeToDelete].name}" with code ${productCodeToDelete}?`, async () => {
                     delete products[productCodeToDelete];
                     localStorage.setItem('products', JSON.stringify(products));
                     showStoreProductsMessage('Produk berhasil dihapus!', 'info');
-                    renderStoreProductsList(storeProductsSearchInput.value); // Render ulang dengan filter saat ini
+                    renderStoreProductsList(storeProductsSearchInput.value); // Re-render with current filters
 
-                    // Hapus kode dari calculatedProductCodes jika ada
+                    // Remove code from calculatedProductCodes if it exists
                     const indexInCalculated = calculatedProductCodes.indexOf(productCodeToDelete);
                     if (indexInCalculated > -1) {
                         calculatedProductCodes.splice(indexInCalculated, 1);
                         localStorage.setItem('calculatedProductCodes', JSON.stringify(calculatedProductCodes));
-                        console.log(`Menghapus ${productCodeToDelete} dari calculatedProductCodes.`);
+                        console.log(`Removed ${productCodeToDelete} from calculatedProductCodes.`);
                     }
                 });
             }
 
-            // === Fungsi Modal Edit Produk ===
-            // Diperbarui: Menambahkan parameter 'stock'
+            // === Edit Product Modal Functions ===
+            // Updated: Added 'stock' parameter
             function showEditProductModal(code, name, price, cost, stock) {
                 editProductModal.classList.remove('hidden');
                 document.body.classList.add('overflow-hidden');
@@ -1981,7 +2057,7 @@
                 editProductNameInput.value = name;
                 editProductPriceInput.value = price;
                 editProductCostInput.value = cost;
-                editProductStockInput.value = stock; // Atur nilai stok
+                editProductStockInput.value = stock; // Set stock value
                 editProductMessageBox.classList.add('hidden');
             }
 
@@ -1995,24 +2071,24 @@
                 const name = editProductNameInput.value.trim();
                 const price = parseFloat(editProductPriceInput.value);
                 const cost = parseFloat(editProductCostInput.value);
-                const stock = parseInt(editProductStockInput.value); // Dapatkan stok yang diedit
+                const stock = parseInt(editProductStockInput.value); // Get edited stock
 
                 if (!code || !name || isNaN(price) || price < 0 || isNaN(cost) || cost < 0 || isNaN(stock) || stock < 0) {
                     showEditProductMessage('Harap lengkapi semua bidang dengan nilai yang valid: Kode, Nama, Harga Jual, Harga Modal, dan Stok.', 'error');
                     return;
                 }
 
-                products[code] = { name: name, price: price, cost: cost, stock: stock }; // Perbarui stok
+                products[code] = { name: name, price: price, cost: cost, stock: stock }; // Update stock
                 localStorage.setItem('products', JSON.stringify(products));
-                showEditProductMessage(`Produk "${name}" dengan kode ${code} berhasil diperbarui!`, 'success');
-                console.log('Produk diperbarui:', products[code]);
+                showEditProductMessage(`Produk "${name}" with code ${code} berhasil diperbarui!`, 'success');
+                console.log('Product updated:', products[code]);
 
-                renderStoreProductsList(); // Perbarui daftar produk toko
+                renderStoreProductsList(); // Update store products list
                 hideEditProductModal();
             }
 
 
-            // === Fungsi Modal Laporan Keuangan ===
+            // === Financial Report Modal Functions ===
             function showFinancialReportModal() {
                 if (!loggedInUser || loggedInUser.role !== 'admin') {
                     showMessage('Anda tidak memiliki hak akses untuk fitur ini.', 'error');
@@ -2021,13 +2097,13 @@
                 financialReportModal.classList.remove('hidden');
                 document.body.classList.add('overflow-hidden');
 
-                // Atur tanggal mulai dan berakhir default ke bulan ini
+                // Set default start and end dates to this month
                 const today = new Date();
                 const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
                 reportStartDateInput.value = firstDayOfMonth.toISOString().slice(0, 10);
                 reportEndDateInput.value = today.toISOString().slice(0, 10);
 
-                // Hitung dan render laporan keuangan saat modal dibuka
+                // Calculate and render financial report when modal opens
                 calculateFinancialSummaryAndRenderChart();
             }
 
@@ -2035,7 +2111,7 @@
                 financialReportModal.classList.add('hidden');
                 document.body.classList.remove('overflow-hidden');
                 if (financialChartInstance) {
-                    financialChartInstance.destroy(); // Hancurkan instance yang ada sebelum membuat yang baru
+                    financialChartInstance.destroy(); // Destroy existing instance before creating a new one
                     financialChartInstance = null;
                 }
             }
@@ -2050,19 +2126,19 @@
                     totalExpensesDisplay.textContent = formatCurrency(0);
                     grossProfitDisplay.textContent = formatCurrency(0);
                     netProfitDisplay.textContent = formatCurrency(0);
-                    renderFinancialChart([], []); // Render grafik kosong
+                    renderFinancialChart([], []); // Render empty chart
                     return;
                 }
 
                 let totalRevenue = 0;
-                let totalCostOfGoodsSold = 0; // Tambahkan variabel untuk total HPP
+                let totalCostOfGoodsSold = 0; // Add variable for total COGS
                 let totalExpenses = 0;
 
-                // Hitung pendapatan dan HPP dari transaksi
+                // Calculate revenue and COGS from transactions
                 const filteredTransactions = transactionsHistory.filter(trans => {
                     const transDate = new Date(trans.dateForComparison || (new Date(trans.dateDisplay).toISOString().slice(0, 10)));
                     if (startDate && transDate < startDate) return false;
-                    // Tambahkan 1 hari ke endDate untuk perbandingan inklusif
+                    // Add 1 day to endDate for inclusive comparison
                     const inclusiveEndDate = endDate ? new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 1) : null;
                     if (inclusiveEndDate && transDate >= inclusiveEndDate) return false;
                     return true;
@@ -2070,20 +2146,20 @@
 
                 filteredTransactions.forEach(trans => {
                     totalRevenue += trans.total;
-                    // Hitung HPP untuk setiap item dalam transaksi
+                    // Calculate COGS for each item in the transaction
                     trans.items.forEach(item => {
-                        // Pastikan item memiliki costPrice. Untuk produk kustom, costPrice sudah dihitung saat ditambahkan ke keranjang.
-                        // Untuk produk terdaftar, costPrice diambil dari `products` atau 0 jika tidak ada.
-                        // Di sini, kita asumsikan item.costPrice sudah benar.
+                        // Ensure item has costPrice. For custom products, costPrice is already calculated when added to cart.
+                        // For registered products, costPrice is fetched from `products` or 0 if not found.
+                        // Here, we assume item.costPrice is already correct.
                         totalCostOfGoodsSold += (item.costPrice || 0) * item.quantity;
                     });
                 });
 
-                // Hitung pengeluaran
+                // Calculate expenses
                 const filteredExpenses = appExpenses.filter(exp => {
                     const expDate = new Date(exp.date);
                     if (startDate && expDate < startDate) return false;
-                    // Tambahkan 1 hari ke endDate untuk perbandingan inklusif
+                    // Add 1 day to endDate for inclusive comparison
                     const inclusiveEndDate = endDate ? new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 1) : null;
                     if (inclusiveEndDate && expDate >= inclusiveEndDate) return false;
                     return true;
@@ -2093,8 +2169,8 @@
                     totalExpenses += exp.amount;
                 });
 
-                const grossProfit = totalRevenue - totalCostOfGoodsSold; // Laba Kotor = Pendapatan - HPP
-                const netProfit = grossProfit - totalExpenses; // Laba Bersih = Laba Kotor - Pengeluaran
+                const grossProfit = totalRevenue - totalCostOfGoodsSold; // Gross Profit = Revenue - COGS
+                const netProfit = grossProfit - totalExpenses; // Net Profit = Gross Profit - Expenses
 
                 totalRevenueDisplay.textContent = formatCurrency(totalRevenue);
                 totalExpensesDisplay.textContent = formatCurrency(totalExpenses);
@@ -2107,7 +2183,7 @@
 
             function renderFinancialChart(transactions, expenses) {
                 if (financialChartInstance) {
-                    financialChartInstance.destroy(); // Hancurkan instance yang ada sebelum membuat yang baru
+                    financialChartInstance.destroy(); // Destroy existing instance before creating a new one
                 }
 
                 const dates = new Set();
@@ -2151,7 +2227,7 @@
                     },
                     options: {
                         responsive: true,
-                        maintainAspectRatio: false, // Penting untuk responsivitas dalam div
+                        maintainAspectRatio: false, // Important for responsiveness within a div
                         scales: {
                             x: {
                                 beginAtZero: true,
@@ -2197,19 +2273,19 @@
                 });
             }
 
-            // --- Fungsi Aplikasi yang Ada (disesuaikan untuk localStorage) ---
+            // --- Existing Application Functions (adapted for localStorage) ---
             function showPaymentModal() {
                 paymentModal.classList.remove('hidden');
-                document.body.classList.add('overflow-hidden'); // Mencegah scrolling latar belakang
+                document.body.classList.add('overflow-hidden'); // Prevent background scrolling
             }
 
             function hidePaymentModal() {
                 paymentModal.classList.add('hidden');
-                document.body.classList.remove('overflow-hidden'); // Mengaktifkan kembali scrolling latar belakang
+                document.body.classList.remove('overflow-hidden'); // Re-enable background scrolling
             }
 
             function showTransactionHistoryModal() {
-                // Saat membuka modal riwayat, tampilkan semua transaksi secara default
+                // When opening history modal, display all transactions by default
                 renderTransactionHistory();
                 transactionHistoryModal.classList.remove('hidden');
                 document.body.classList.add('overflow-hidden');
@@ -2220,10 +2296,10 @@
                 document.body.classList.remove('overflow-hidden');
             }
 
-            // Fungsi untuk menampilkan modal detail transaksi
+            // Function to show transaction detail modal
             function showTransactionDetailModal(transaction) {
                 if (!transaction) {
-                    showTransactionDetailMessage('Detail transaksi tidak ditemukan.', 'error');
+                    showTransactionDetailMessage('Transaction details not found.', 'error');
                     return;
                 }
 
@@ -2233,7 +2309,7 @@
                 detailTransactionPaymentMethod.textContent = transaction.paymentMethod;
                 detailTransactionCashier.textContent = transaction.cashierUsername;
 
-                transactionDetailItems.innerHTML = ''; // Bersihkan item sebelumnya
+                transactionDetailItems.innerHTML = ''; // Clear previous items
                 if (transaction.items && transaction.items.length > 0) {
                     transaction.items.forEach(item => {
                         const row = transactionDetailItems.insertRow();
@@ -2253,7 +2329,7 @@
                 document.body.classList.add('overflow-hidden');
             }
 
-            // Fungsi untuk menyembunyikan modal detail transaksi
+            // Function to hide transaction detail modal
             function hideTransactionDetailModal() {
                 transactionDetailModal.classList.add('hidden');
                 document.body.classList.remove('overflow-hidden');
@@ -2262,23 +2338,23 @@
 
             function updateSummary() {
                 let currentSubtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                let discount = parseFloat(discountInput.value) || 0; // Dapatkan nilai diskon
+                let discount = parseFloat(discountInput.value) || 0; // Get discount value
 
-                // Pastikan diskon tidak membuat total menjadi negatif
+                // Ensure discount doesn't make total negative
                 if (discount > currentSubtotal) {
-                    discount = currentSubtotal; // Diskon tidak boleh melebihi subtotal
-                    discountInput.value = discount; // Perbarui kolom input
+                    discount = currentSubtotal; // Discount cannot exceed subtotal
+                    discountInput.value = discount; // Update input field
                 }
 
-                let currentGrandTotal = currentSubtotal - discount; // Kurangi diskon
+                let currentGrandTotal = currentSubtotal - discount; // Deduct discount
 
-                subtotalSpan.textContent = formatCurrency(currentSubtotal); // Subtotal sebelum diskon
-                grandTotalSpan.textContent = formatCurrency(currentGrandTotal); // Total akhir setelah diskon
+                subtotalSpan.textContent = formatCurrency(currentSubtotal); // Subtotal before discount
+                grandTotalSpan.textContent = formatCurrency(currentGrandTotal); // Final total after discount
 
-                // Perbarui perhitungan kembalian
+                // Update change calculation
                 calculateChange();
 
-                // Perbarui subtotal di keranjang
+                // Update subtotal in cart
                 cartSubtotalSpan.textContent = formatCurrency(currentSubtotal);
             }
 
@@ -2292,7 +2368,7 @@
                 changeSpan.classList.toggle('text-blue-600', change >= 0);
             }
 
-            // Fungsi untuk merender item keranjang
+            // Function to render cart items
             function renderCart() {
                 cartItemsContainer.innerHTML = '';
                 if (cart.length === 0) {
@@ -2316,7 +2392,7 @@
                         `;
                         cartItemsContainer.appendChild(itemElement);
                     });
-                    // Tambahkan event listener untuk tombol baru
+                    // Add event listeners for new buttons
                     document.querySelectorAll('.update-quantity-btn').forEach(button => {
                         button.addEventListener('click', updateCartItemQuantity);
                     });
@@ -2324,10 +2400,10 @@
                         button.addEventListener('click', removeCartItem);
                     });
                 }
-                updateSummary(); // Selalu perbarui ringkasan setelah merender keranjang
+                updateSummary(); // Always update summary after rendering cart
             }
 
-            // Perbarui kuantitas item keranjang
+            // Update cart item quantity
             function updateCartItemQuantity(event) {
                 const index = parseInt(event.target.dataset.index);
                 const change = parseInt(event.target.dataset.change);
@@ -2360,7 +2436,7 @@
                 }
             }
 
-            // Hapus item dari keranjang
+            // Remove item from cart
             function removeCartItem(event) {
                 const index = parseInt(event.target.dataset.index);
                 if (cart[index]) {
@@ -2369,9 +2445,9 @@
                 }
             }
 
-            // Logika tambah produk ke keranjang (dari bidang input produk)
+            // Logic to add product to cart (from product input fields)
             function addProductToCart(productCode, productName, price, quantity, isCustom = false) {
-                console.log("addProductToCart dipanggil dengan:", productCode, productName, price, quantity, "Kustom:", isCustom);
+                console.log("addProductToCart called with:", productCode, productName, price, quantity, "Custom:", isCustom);
 
                 if (!productName || isNaN(price) || price < 0 || isNaN(quantity) || quantity <= 0) {
                     showMessage('Harap masukkan Nama Produk, Harga, dan Kuantitas yang valid.', 'error');
@@ -2447,35 +2523,35 @@
 
 
                 showMessage(`Produk "${productName}" ditambahkan ke keranjang.`, 'success');
-                renderCart(); // Render ulang keranjang
+                renderCart(); // Re-render cart
             }
 
-            // Penanganan Input Otomatis (Debounced) untuk Produk Terdaftar
+            // Auto-fill Input Handling (Debounced) for Registered Products
             let productCodeInputTimeout = null;
             productCodeInput.addEventListener('input', function() {
-                clearTimeout(productCodeInputTimeout); // Hapus timeout sebelumnya
+                clearTimeout(productCodeInputTimeout); // Clear previous timeout
 
                 const code = productCodeInput.value.trim().toUpperCase();
                 const product = products[code];
 
-                // Jika kode produk tidak kosong dan produk ditemukan, isi otomatis bidang lain
+                // If product code is not empty and product is found, auto-fill other fields
                 if (code && product) {
                     productNameInput.value = product.name;
                     priceInput.value = product.price;
-                    quantityInput.value = '1'; // Atur ulang kuantitas ke 1
+                    quantityInput.value = '1'; // Reset quantity to 1
 
-                    // Periksa stok untuk auto-add
+                    // Check stock for auto-add
                     if (product.stock <= 0) {
                         showMessage('Stok Habis!', 'error');
-                        productCodeInput.value = ''; // Bersihkan input jika habis
+                        productCodeInput.value = ''; // Clear input if out of stock
                         productNameInput.value = '';
                         priceInput.value = '0';
                         quantityInput.value = '1';
-                        return; // Hentikan proses auto-add
+                        return; // Stop auto-add process
                     }
                     // If stock is available, set timeout for auto-add
                     productCodeInputTimeout = setTimeout(() => {
-                        console.log("Debounced: Mencoba menambahkan produk terdaftar secara otomatis:", code);
+                        console.log("Debounced: Attempting to auto-add registered product:", code);
                         // Ensure stock is still sufficient at time of auto-add
                         if (product.stock > 0) { // Double check here
                             addProductToCart(code, product.name, product.price, parseInt(quantityInput.value) || 1, false);
@@ -2552,17 +2628,17 @@
             });
 
 
-            // Tambahkan event listener untuk Enter pada input quantity agar bisa menambah ke keranjang
+            // Add event listener for Enter on quantity input to add to cart
             quantityInput.addEventListener('keypress', function(event) {
                 if (event.key === 'Enter') {
-                    event.preventDefault(); // Mencegah form submit default
-                    addToCartRegisteredBtn.click(); // Panggil fungsi klik tombol produk terdaftar
+                    event.preventDefault(); // Prevent default form submission
+                    addToCartRegisteredBtn.click(); // Call registered product button click function
                 }
             });
             customQuantityInput.addEventListener('keypress', function(event) {
                 if (event.key === 'Enter') {
-                    event.preventDefault(); // Mencegah form submit default
-                    addToCartCustomBtn.click(); // Panggil fungsi klik tombol produk kustom
+                    event.preventDefault(); // Prevent default form submission
+                    addToCartCustomBtn.click(); // Call custom product button click function
                 }
             });
 
@@ -2570,10 +2646,10 @@
             function clearCart() {
                 if (cart.length > 0) {
                     cart = [];
-                    renderCart(); // Render keranjang kosong
+                    renderCart(); // Render empty cart
                     showMessage('Keranjang belanja dikosongkan.', 'info');
-                    amountReceivedInput.value = ''; // Bersihkan jumlah yang diterima
-                    discountInput.value = '0'; // Reset diskon
+                    amountReceivedInput.value = ''; // Clear amount received
+                    discountInput.value = '0'; // Reset discount
                 }
             }
 
@@ -2634,7 +2710,7 @@
                 localStorage.setItem('transactionsHistory', JSON.stringify(transactionsHistory)); // Save to localStorage
 
                 showMessage('Transaksi berhasil diproses!', 'success');
-                console.log('Transaksi diproses:', transaction);
+                console.log('Transaction processed:', transaction);
                 clearCart();
                 amountReceivedInput.value = '';
                 changeSpan.textContent = formatCurrency(0);
@@ -2689,46 +2765,46 @@
                     const transactionToDelete = transactionsHistory.find(trans => trans.id === transactionIdToDelete);
 
                     if (transactionToDelete) {
-                        // Mengembalikan stok produk yang terdaftar
+                        // Return stock for registered products
                         transactionToDelete.items.forEach(item => {
-                            // Hanya kembalikan stok jika itu produk terdaftar (bukan kustom)
+                            // Only return stock if it's a registered product (not custom)
                             if (products[item.id] && !item.id.startsWith('CUSTOM_')) {
                                 products[item.id].stock += item.quantity;
-                                console.log(`Stok produk "${item.name}" (kode: ${item.id}) dikembalikan sebanyak ${item.quantity}. Stok baru: ${products[item.id].stock}`);
+                                console.log(`Stock for product "${item.name}" (code: ${item.id}) returned by ${item.quantity}. New stock: ${products[item.id].stock}`);
                             }
                         });
-                        // Simpan kembali produk yang diperbarui ke localStorage
+                        // Save updated products back to localStorage
                         localStorage.setItem('products', JSON.stringify(products));
                     }
 
                     transactionsHistory = transactionsHistory.filter(trans => trans.id !== transactionIdToDelete);
-                    localStorage.setItem('transactionsHistory', JSON.stringify(transactionsHistory)); // Simpan ke localStorage
+                    localStorage.setItem('transactionsHistory', JSON.stringify(transactionsHistory)); // Save to localStorage
                     showMessage(`Transaksi ${transactionIdToDelete} telah dihapus. Stok produk yang relevan telah dikembalikan.`, 'info');
-                    renderTransactionHistory(transactionDateFilterInput.value || null); // Render ulang riwayat
-                    updateTodaySalesDisplay(); // Perbarui penjualan
-                    renderStoreProductsList(); // Perbarui tampilan daftar produk toko untuk menunjukkan stok yang diperbarui
+                    renderTransactionHistory(transactionDateFilterInput.value || null); // Re-render history
+                    updateTodaySalesDisplay(); // Update sales
+                    renderStoreProductsList(); // Update store products list display to show updated stock
                 });
             }
 
-            // Fungsi untuk memperbarui tampilan penjualan hari ini
+            // Function to update today's sales display
             function updateTodaySalesDisplay() {
                 const todayFormatted = new Date().toISOString().slice(0, 10);
                 let totalSalesToday = 0;
                 transactionsHistory.forEach(transaction => {
                     let transactionDateForComparison = transaction.dateForComparison;
-                    // Pastikan transaksi memiliki dateForComparison, jika tidak coba ambil dari dateDisplay
+                    // Ensure transaction has dateForComparison, if not try to get from dateDisplay
                     if (!transactionDateForComparison && transaction.dateDisplay) {
                         const parsedDate = new Date(transaction.dateDisplay);
-                        // Periksa apakah parsedDate adalah tanggal yang valid
+                        // Check if parsedDate is a valid date
                         if (!isNaN(parsedDate.getTime())) {
                             transactionDateForComparison = parsedDate.toISOString().slice(0, 10);
                         } else {
-                            console.warn('dateDisplay tidak valid ditemui, melewati transaksi untuk perhitungan penjualan:', transaction.dateDisplay);
-                            return; // Lewati transaksi ini jika dateDisplay tidak valid
+                            console.warn('Invalid dateDisplay encountered, skipping transaction for sales calculation:', transaction.dateDisplay);
+                            return; // Skip this transaction if dateDisplay is invalid
                         }
                     }
 
-                    // Hanya tambahkan penjualan jika tanggal transaksi cocok dengan tanggal hari ini
+                    // Only add sales if transaction date matches today's date
                     if (transactionDateForComparison === todayFormatted) {
                         totalSalesToday += transaction.total;
                     }
@@ -2736,25 +2812,24 @@
                 todaySalesMainScreen.textContent = formatCurrency(totalSalesToday);
             }
 
-            // Fungsi untuk memeriksa dan mereset penjualan harian jika tanggal berubah
+            // Function to check and reset daily sales if date changes
             function checkAndResetDailySales() {
                 const today = new Date().toISOString().slice(0, 10); // Format YYYY-MM-DD
-                const lastAccessDate = localStorage.getItem('lastAccessDate'); // Tanggal terakhir aplikasi dibuka
+                const lastAccessDate = localStorage.getItem('lastAccessDate'); // Last date app was opened
 
                 if (lastAccessDate !== today) {
-                    console.log(`Tanggal berubah dari ${lastAccessDate} ke ${today}. Mereset pendapatan harian.`);
-                    // Opsional: Anda bisa menambahkan logika untuk mengarsipkan 'pendapatan hari sebelumnya' jika diperlukan
-                    // Misalnya, menyimpan totalSalesToday dari tanggal sebelumnya ke riwayat pendapatan harian terpisah.
+                    console.log(`Date changed from ${lastAccessDate} to ${today}. Resetting daily revenue.`);
+                    // Optional: You can add logic to archive 'previous day's revenue' if needed
+                    // For example, save totalSalesToday from previous date to a separate daily revenue history.
 
-                    // Update total penjualan hari ini untuk tanggal yang baru (akan dihitung ulang)
+                    // Update total sales for the new date (will be re-calculated)
                     updateTodaySalesDisplay();
                 } else {
-                    console.log(`Masih di tanggal yang sama (${today}). Pendapatan harian dipertahankan.`);
+                    console.log(`Still on the same date (${today}). Daily revenue maintained.`);
                 }
-                // Selalu perbarui tanggal akses terakhir
+                // Always update last access date
                 localStorage.setItem('lastAccessDate', today);
             }
-
 
             // --- Event Listeners ---
             processPaymentBtn.addEventListener('click', showPaymentModal);
@@ -2778,7 +2853,7 @@
                 if (event.target === transactionHistoryModal) { hideTransactionHistoryModal(); }
             });
 
-            // Event Listener Modal Detail Transaksi
+            // Transaction Detail Modal Event Listener
             closeTransactionDetailModalBtn.addEventListener('click', hideTransactionDetailModal);
             transactionDetailModal.addEventListener('click', function(event) {
                 if (event.target === transactionDetailModal) { hideTransactionDetailModal(); }
@@ -2793,7 +2868,7 @@
                 renderTransactionHistory();
             });
 
-            // === Event Listener untuk Laporan Keuangan ===
+            // === Event Listeners for Financial Report ===
             openFinancialReportModalBtn.addEventListener('click', showFinancialReportModal);
             closeFinancialReportModalBtn.addEventListener('click', hideFinancialReportModal);
             financialReportModal.addEventListener('click', function(event) {
@@ -2803,53 +2878,53 @@
             clearFinancialFilterBtn.addEventListener('click', function() {
                 reportStartDateInput.value = '';
                 reportEndDateInput.value = '';
-                calculateFinancialSummaryAndRenderChart(); // Hitung ulang tanpa filter
+                calculateFinancialSummaryAndRenderChart(); // Recalculate without filters
             });
 
             document.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape') {
                     if (!paymentModal.classList.contains('hidden')) { hidePaymentModal(); }
                     if (!transactionHistoryModal.classList.contains('hidden')) { hideTransactionHistoryModal(); }
-                    if (!transactionDetailModal.classList.contains('hidden')) { hideTransactionDetailModal(); } // Tutup modal detail
+                    if (!transactionDetailModal.classList.contains('hidden')) { hideTransactionDetailModal(); } // Close detail modal
                     if (!userSettingsModal.classList.contains('hidden')) { userSettingsModal.classList.add('hidden'); document.body.classList.remove('overflow-hidden'); }
                     if (!priceCalculatorModal.classList.contains('hidden')) { hidePriceCalculatorModal(); }
                     if (!expensesModal.classList.contains('hidden')) { hideExpensesModal(); }
                     if (!addProductModal.classList.contains('hidden')) { hideAddProductModal(); }
                     if (!storeProductsModal.classList.contains('hidden')) { hideStoreProductsModal(); }
-                    if (!editProductModal.classList.contains('hidden')) { hideEditProductModal(); } // Tutup modal edit produk
+                    if (!editProductModal.classList.contains('hidden')) { hideEditProductModal(); } // Close edit product modal
                     if (!financialReportModal.classList.contains('hidden')) { hideFinancialReportModal(); }
                     if (!confirmModal.classList.contains('hidden')) { hideConfirmModal(); }
                 }
             });
 
-            // Alihkan Dropdown Menu Admin
+            // Toggle Admin Menu Dropdown
             adminMenuToggle.addEventListener('click', function() {
                 adminMenuDropdown.classList.toggle('hidden');
             });
 
-            // Tutup dropdown jika pengguna mengklik di luar area dropdown
+            // Close dropdown if user clicks outside dropdown area
             window.addEventListener('click', function(event) {
                 if (!adminMenuContainer.contains(event.target)) {
                     adminMenuDropdown.classList.add('hidden');
                 }
             });
 
-            // Listener Tombol Menu Admin
+            // Admin Menu Button Listeners
             openPriceCalculatorBtn.addEventListener('click', openPriceCalculatorModal);
             openExpensesModalBtn.addEventListener('click', showExpensesModal);
             openAddProductModalBtn.addEventListener('click', showAddProductModal);
             openStoreProductsModalBtn.addEventListener('click', showStoreProductsModal);
 
-            // Event Listener untuk Ekspor/Impor DATA LENGKAP
+            // Event Listeners for FULL DATA Export/Import
             exportDataBtn.addEventListener('click', exportData);
             importDataBtn.addEventListener('click', importData);
 
-            // Event Listener untuk Ekspor/Impor PRODUK SAJA (BARU)
+            // Event Listeners for PRODUCT ONLY Export/Import (NEW)
             exportProductsBtn.addEventListener('click', exportProducts);
             importProductsBtn.addEventListener('click', importProducts);
 
 
-            // Event Listener untuk Modal Kalkulator Harga
+            // Event Listeners for Price Calculator Modal
             closePriceCalculatorModalBtn.addEventListener('click', hidePriceCalculatorModal);
             priceCalculatorModal.addEventListener('click', function(event) {
                 if (event.target === priceCalculatorModal) { hidePriceCalculatorModal(); }
@@ -2862,7 +2937,7 @@
                 if (event.key === 'Enter') { event.preventDefault(); calculateSellPrice(); }
             });
 
-            // Event listener tombol salin untuk Kalkulator Harga
+            // Copy button event listeners for Price Calculator
             copyProductCodeCalcBtn.addEventListener('click', () => {
                 copyToClipboard(productCodeCalcInput.value, priceCalculatorMessageBox);
             });
@@ -2873,7 +2948,7 @@
             });
 
 
-            // Event Listener untuk Modal Pengeluaran
+            // Event Listeners for Expenses Modal
             closeExpensesModalBtn.addEventListener('click', hideExpensesModal);
             expensesModal.addEventListener('click', function(event) {
                 if (event.target === expensesModal) { hideExpensesModal(); }
@@ -2894,13 +2969,13 @@
                 renderExpensesList();
             });
 
-            // Event Listener untuk Modal Tambah Produk
+            // Event Listeners for Add Product Modal
             closeAddProductModalBtn.addEventListener('click', hideAddProductModal);
             addProductModal.addEventListener('click', function(event) {
                 if (event.target === addProductModal) { hideAddProductModal(); }
             });
             addNewProductBtn.addEventListener('click', addNewProduct);
-            // Menambahkan listener keypress untuk bidang wajib untuk memicu penambahan saat Enter
+            // Add keypress listeners for required fields to trigger add on Enter
             newProductCodeInput.addEventListener('keypress', function(event) {
                 if (event.key === 'Enter') { event.preventDefault(); addNewProduct(); }
             });
@@ -2918,7 +2993,7 @@
             });
 
 
-            // Event Listener untuk Modal Produk Toko
+            // Event Listeners for Store Products Modal
             closeStoreProductsModalBtn.addEventListener('click', hideStoreProductsModal);
             storeProductsModal.addEventListener('click', function(event) {
                 if (event.target === storeProductsModal) { hideStoreProductsModal(); }
@@ -2934,7 +3009,7 @@
                 if (event.key === 'Enter') { event.preventDefault(); renderStoreProductsList(storeProductsSearchInput.value); }
             });
 
-            // Event Listener untuk Modal Edit Produk
+            // Event Listeners for Edit Product Modal
             closeEditProductModalBtn.addEventListener('click', hideEditProductModal);
             editProductModal.addEventListener('click', function(event) {
                 if (event.target === editProductModal) { hideEditProductModal(); }
@@ -2954,7 +3029,7 @@
             });
 
 
-            // === Tombol dan Logika Reset Semua Data ===
+            // === Reset All Data Button and Logic ===
             const resetAllDataBtn = document.getElementById('reset-all-data-btn');
 
             function resetAllApplicationData() {
@@ -2967,28 +3042,29 @@
                     localStorage.removeItem('transactionsHistory');
                     localStorage.removeItem('appUsers');
                     localStorage.removeItem('appExpenses');
-                    localStorage.removeItem('products'); // Hapus juga data produk
-                    localStorage.removeItem('calculatedProductCodes'); // Hapus kode produk yang dihitung
-                    localStorage.removeItem('lastAccessDate'); // Hapus tanggal akses terakhir
+                    localStorage.removeItem('products'); // Also remove product data
+                    localStorage.removeItem('calculatedProductCodes'); // Remove calculated product codes
+                    localStorage.removeItem('lastAccessDate'); // Remove last access date
+                    localStorage.removeItem('darkMode'); // Remove dark mode setting
 
-                    // Reset data di memori
+                    // Reset in-memory data
                     transactionsHistory = [];
                     appUsers = [
                         { id: 'admin1', username: 'admin', password: 'adminpass', role: 'admin' },
                         { id: 'kasir1', username: 'kasir', password: 'kasirpass', role: 'kasir' }
-                    ]; // Inisialisasi ulang pengguna default
+                    ]; // Re-initialize default users
                     appExpenses = [];
-                    products = {}; // Inisialisasi ulang sebagai objek kosong
-                    calculatedProductCodes = []; // Inisialisasi ulang sebagai array kosong
+                    products = {}; // Re-initialize as empty object
+                    calculatedProductCodes = []; // Re-initialize as empty array
 
-                    localStorage.setItem('appUsers', JSON.stringify(appUsers)); // Simpan kembali pengguna default
-                    localStorage.setItem('products', JSON.stringify(products)); // Simpan kembali produk kosong
-                    localStorage.setItem('calculatedProductCodes', JSON.stringify(calculatedProductCodes)); // Simpan kembali kode produk yang dihitung kosong
+                    localStorage.setItem('appUsers', JSON.stringify(appUsers)); // Save default users back
+                    localStorage.setItem('products', JSON.stringify(products)); // Save empty products back
+                    localStorage.setItem('calculatedProductCodes', JSON.stringify(calculatedProductCodes)); // Save empty calculated product codes back
 
                     showMessage('Semua data aplikasi telah direset! Aplikasi akan dimuat ulang.', 'success');
-                    console.log("Semua data direset. Aplikasi akan dimuat ulang.");
+                    console.log("All data reset. Application will reload.");
 
-                    // Tunda sebentar untuk memungkinkan pesan terlihat, lalu muat ulang
+                    // Delay briefly to allow message to be seen, then reload
                     setTimeout(() => {
                         window.location.reload();
                     }, 2000);
@@ -3001,10 +3077,39 @@
             tabRegisteredProductBtn.addEventListener('click', () => switchProductInputTab('registered'));
             tabCustomProductBtn.addEventListener('click', () => switchProductInputTab('custom'));
 
-            // Status awal: tampilkan layar login
+            // === New Feature Logic: Toggle Sales Visibility ===
+            toggleSalesVisibilityBtn.addEventListener('click', () => {
+                isSalesVisible = !isSalesVisible; // Toggle state
+                if (isSalesVisible) {
+                    todaySalesMainScreen.classList.remove('blur-sm'); // Remove blur
+                    toggleSalesVisibilityIcon.classList.remove('fa-eye-slash'); // Change icon to eye
+                    toggleSalesVisibilityIcon.classList.add('fa-eye');
+                } else {
+                    todaySalesMainScreen.classList.add('blur-sm'); // Add blur
+                    toggleSalesVisibilityIcon.classList.remove('fa-eye'); // Change icon to eye-slash
+                    toggleSalesVisibilityIcon.classList.add('fa-eye-slash');
+                }
+            });
+
+            // === New Feature Logic: Toggle Dark/Light Mode ===
+            toggleDarkModeBtn.addEventListener('click', () => {
+                isDarkMode = !isDarkMode; // Toggle state
+                if (isDarkMode) {
+                    document.body.classList.add('dark-mode');
+                    toggleDarkModeIcon.classList.remove('fa-lightbulb');
+                    toggleDarkModeIcon.classList.add('fa-sun'); // Change icon to sun
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    toggleDarkModeIcon.classList.remove('fa-sun');
+                    toggleDarkModeIcon.classList.add('fa-lightbulb'); // Change icon to lightbulb
+                }
+                localStorage.setItem('darkMode', isDarkMode); // Save dark mode preference
+            });
+
+            // Initial status: show login screen
             showLoginScreen();
 
-            // Panggil fungsi ini saat aplikasi dimuat untuk pertama kali
+            // Call this function when the application loads for the first time
             checkAndResetDailySales();
         });
     </script>
