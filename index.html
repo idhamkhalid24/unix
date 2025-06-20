@@ -1038,8 +1038,8 @@
                     adminMenuContainer.classList.add('hidden');
                     console.log("Menu Admin DISEMBUNYIKAN untuk pengguna:", loggedInUser ? loggedInUser.username : 'Tidak Ada Pengguna', "Peran:", loggedInUser ? loggedInUser.role : 'N/A');
                 }
-                updateTodaySalesDisplay();
                 updateCurrentDate(); // Panggil untuk memperbarui tanggal
+                updateTodaySalesDisplay(); // Panggil untuk memperbarui penjualan hari ini
                 renderCart(); // Render keranjang saat aplikasi utama ditampilkan
                 showRegisteredProductTab(); // Tampilkan tab produk terdaftar secara default
             }
@@ -2618,7 +2618,7 @@
                 const transaction = {
                     id: 'TRX-' + Date.now(), // Generate local ID for offline
                     dateDisplay: new Date().toLocaleString('id-ID', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
-                    dateForComparison: new Date().toISOString().slice(0, 10), // Formatablanca-MM-DD format for easy comparison
+                    dateForComparison: new Date().toISOString().slice(0, 10), // Format YYYY-MM-DD for easy comparison
                     total: grandTotal,
                     subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
                     discount: parseFloat(discountInput.value) || 0,
@@ -2710,27 +2710,51 @@
                 });
             }
 
+            // Fungsi untuk memperbarui tampilan penjualan hari ini
             function updateTodaySalesDisplay() {
                 const todayFormatted = new Date().toISOString().slice(0, 10);
                 let totalSalesToday = 0;
                 transactionsHistory.forEach(transaction => {
                     let transactionDateForComparison = transaction.dateForComparison;
+                    // Pastikan transaksi memiliki dateForComparison, jika tidak coba ambil dari dateDisplay
                     if (!transactionDateForComparison && transaction.dateDisplay) {
                         const parsedDate = new Date(transaction.dateDisplay);
+                        // Periksa apakah parsedDate adalah tanggal yang valid
                         if (!isNaN(parsedDate.getTime())) {
                             transactionDateForComparison = parsedDate.toISOString().slice(0, 10);
                         } else {
                             console.warn('dateDisplay tidak valid ditemui, melewati transaksi untuk perhitungan penjualan:', transaction.dateDisplay);
-                            return;
+                            return; // Lewati transaksi ini jika dateDisplay tidak valid
                         }
                     }
-                    // Only add sales if transaction date matches today's date
+
+                    // Hanya tambahkan penjualan jika tanggal transaksi cocok dengan tanggal hari ini
                     if (transactionDateForComparison === todayFormatted) {
                         totalSalesToday += transaction.total;
                     }
                 });
                 todaySalesMainScreen.textContent = formatCurrency(totalSalesToday);
             }
+
+            // Fungsi untuk memeriksa dan mereset penjualan harian jika tanggal berubah
+            function checkAndResetDailySales() {
+                const today = new Date().toISOString().slice(0, 10); // Format YYYY-MM-DD
+                const lastAccessDate = localStorage.getItem('lastAccessDate'); // Tanggal terakhir aplikasi dibuka
+
+                if (lastAccessDate !== today) {
+                    console.log(`Tanggal berubah dari ${lastAccessDate} ke ${today}. Mereset pendapatan harian.`);
+                    // Opsional: Anda bisa menambahkan logika untuk mengarsipkan 'pendapatan hari sebelumnya' jika diperlukan
+                    // Misalnya, menyimpan totalSalesToday dari tanggal sebelumnya ke riwayat pendapatan harian terpisah.
+
+                    // Update total penjualan hari ini untuk tanggal yang baru (akan dihitung ulang)
+                    updateTodaySalesDisplay();
+                } else {
+                    console.log(`Masih di tanggal yang sama (${today}). Pendapatan harian dipertahankan.`);
+                }
+                // Selalu perbarui tanggal akses terakhir
+                localStorage.setItem('lastAccessDate', today);
+            }
+
 
             // --- Event Listeners ---
             processPaymentBtn.addEventListener('click', showPaymentModal);
@@ -2945,6 +2969,7 @@
                     localStorage.removeItem('appExpenses');
                     localStorage.removeItem('products'); // Hapus juga data produk
                     localStorage.removeItem('calculatedProductCodes'); // Hapus kode produk yang dihitung
+                    localStorage.removeItem('lastAccessDate'); // Hapus tanggal akses terakhir
 
                     // Reset data di memori
                     transactionsHistory = [];
@@ -2978,6 +3003,9 @@
 
             // Status awal: tampilkan layar login
             showLoginScreen();
+
+            // Panggil fungsi ini saat aplikasi dimuat untuk pertama kali
+            checkAndResetDailySales();
         });
     </script>
 
