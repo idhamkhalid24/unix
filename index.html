@@ -62,6 +62,36 @@
         .copy-button:hover {
             background-color: #357ABD; /* Darker Blue */
         }
+        /* Styles for active/inactive tabs */
+        /* Updated tab-button classes for different colors and spacing */
+/* Styles for active/inactive tabs */
+.tab-button {
+    /* Hapus mr-2 di sini, akan menggunakan gap pada parent */
+    @apply px-4 py-2 text-sm font-semibold rounded-t-lg;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out; /* Tambahkan transisi */
+}
+
+/* Modifikasi parent div untuk menambahkan gap */
+/* Cari div ini: <div class="flex mb-4 border-b border-gray-200"> */
+/* Tambahkan class Tailwind CSS seperti 'gap-4' atau 'gap-6' */
+/* Contoh: <div class="flex gap-6 mb-4 border-b border-gray-200"> */
+
+.tab-button.active-cashier {
+    /* Mengubah warna latar belakang aktif menjadi biru */
+    @apply bg-blue-600 text-white;
+}
+.tab-button.inactive-cashier {
+    /* Latar belakang transparan, teks biru, border bawah saat hover */
+    @apply bg-transparent text-blue-800 hover:bg-blue-100 hover:border-b-2 hover:border-blue-600;
+}
+.tab-button.active-custom-cashier {
+    /* Mengubah warna latar belakang aktif menjadi merah */
+    @apply bg-red-600 text-white;
+}
+.tab-button.inactive-custom-cashier {
+    /* Latar belakang transparan, teks merah, border bawah saat hover */
+    @apply bg-transparent text-red-800 hover:bg-red-100 hover:border-b-2 hover:border-red-600;
+}
     </style>
 </head>
 <body class="p-4 lg:p-8 flex items-center justify-center min-h-screen">
@@ -127,7 +157,7 @@
                                 <hr class="my-1 border-gray-200">
                                 <button id="export-data-btn" class="text-green-700 block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 font-semibold" role="menuitem" tabindex="-1">Ekspor Data Aplikasi Lengkap</button>
                                 <input type="file" id="import-file-input" accept=".json" class="hidden">
-                                <button id="import-data-btn" class="text-blue-700 block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 font-semibold" role="menuitem" tabindex="-1">Impor Data Aplikasi Lengkap</button>
+                                <button id="import-data-btn" class="text-blue-700 block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 font-semibold" role="menuitem" tabindex="-1">Impor Data Aplikasi Lengpat</button>
                                 <hr class="my-1 border-1 border-gray-200">
                                 <button id="reset-all-data-btn" class="text-red-600 block px-4 py-2 text-sm w-full text-left hover:bg-red-100 font-semibold" role="menuitem" tabindex="-1">Reset Semua Data</button>
                             </div>
@@ -142,39 +172,83 @@
         </header>
 
         <main class="flex-grow p-6 bg-white rounded-b-lg flex flex-col lg:flex-row gap-6">
-            <!-- Input Produk Section -->
+            <!-- Input Produk Section (TABS) -->
             <section class="lg:w-1/2 bg-gray-50 p-6 rounded-lg shadow-md flex flex-col">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-6 pb-3 border-b-2 border-gray-200">Input Produk</h2>
+                <!-- Tabs for Product Input -->
+                <div class="flex gap-6 mb-4 border-b border-gray-200">
+                    <!-- Changed button names and added specific color classes -->
+                    <button id="tab-registered-product" class="tab-button active-cashier">Cashier</button>
+                    <button id="tab-custom-product" class="tab-button inactive-custom-cashier">Custom Cashier</button>
+                </div>
 
-                <div class="mb-4">
-                    <label for="product-code" class="block text-gray-700 text-sm font-medium mb-2">Kode Produk (Opsional):</label>
-                    <div class="flex">
-                        <input type="text" id="product-code" placeholder="Scan atau ketik kode produk"
-                            class="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200">
+                <!-- Registered Product Input Area -->
+                <div id="registered-product-input-area">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6 pb-3 border-b-2 border-gray-200">Cashier</h2>
+
+                    <div class="mb-4">
+                        <label for="product-code" class="block text-gray-700 text-sm font-medium mb-2">Kode Produk (Opsional):</label>
+                        <div class="flex">
+                            <input type="text" id="product-code" placeholder="Scan atau ketik kode produk"
+                                class="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200">
+                        </div>
                     </div>
+
+                    <div class="mb-4">
+                        <label for="product-name" class="block text-gray-700 text-sm font-medium mb-2">Nama Produk (Otomatis):</label>
+                        <input type="text" id="product-name" readonly disabled
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed text-gray-800" placeholder="Nama produk akan muncul di sini">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="price" class="block text-gray-700 text-sm font-medium mb-2">Harga:</label>
+                        <input type="text" id="price" placeholder="Harga akan muncul di sini" value="0" readonly disabled
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed text-gray-800">
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="quantity" class="block text-gray-700 text-sm font-medium mb-2">Jumlah:</label>
+                        <input type="number" id="quantity" value="1" min="1"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200">
+                    </div>
+
+                    <button id="add-to-cart-btn-registered" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-semibold transition duration-200 shadow-md hover:scale-105 w-full mb-6">
+                        Tambahkan ke Keranjang (Terdaftar)
+                    </button>
                 </div>
 
-                <div class="mb-4">
-                    <label for="product-name" class="block text-gray-700 text-sm font-medium mb-2">Nama Produk (Wajib):</label>
-                    <input type="text" id="product-name"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200 text-gray-800" placeholder="Ketik nama produk">
-                </div>
+                <!-- Custom Product Input Area (Hidden by default) -->
+                <div id="custom-product-input-area" class="hidden">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6 pb-3 border-b-2 border-gray-200">Custom Cashier</h2>
 
-                <div class="mb-4">
-                    <label for="price" class="block text-gray-700 text-sm font-medium mb-2">Harga:</label>
-                    <input type="text" id="price" placeholder="Masukkan harga" value="0"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200">
-                </div>
+                    <div class="mb-4">
+                        <label for="custom-product-code" class="block text-gray-700 text-sm font-medium mb-2">Kode Produk Kustom (Opsional):</label>
+                        <input type="text" id="custom-product-code" placeholder="Kode unik produk kustom (misal: CUST001)"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200">
+                        <p class="text-xs text-gray-500 mt-1">Tidak boleh sama dengan kode produk terdaftar.</p>
+                    </div>
 
-                <div class="mb-6">
-                    <label for="quantity" class="block text-gray-700 text-sm font-medium mb-2">Jumlah:</label>
-                    <input type="number" id="quantity" value="1" min="1"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200">
-                </div>
+                    <div class="mb-4">
+                        <label for="custom-product-name" class="block text-gray-700 text-sm font-medium mb-2">Nama Produk Kustom (Wajib):</label>
+                        <input type="text" id="custom-product-name" placeholder="Nama produk kustom"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200">
+                    </div>
 
-                <button id="add-to-cart-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-semibold transition duration-200 shadow-md hover:scale-105 w-full mb-6">
-                    Tambahkan ke Keranjang
-                </button>
+                    <div class="mb-4">
+                        <label for="custom-price" class="block text-gray-700 text-sm font-medium mb-2">Harga Jual Kustom (Wajib):</label>
+                        <input type="number" id="custom-price" placeholder="Masukkan harga jual kustom" value="0" min="0"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200">
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="custom-quantity" class="block text-gray-700 text-sm font-medium mb-2">Jumlah (Wajib):</label>
+                        <input type="number" id="custom-quantity" value="1" min="1"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200">
+                    </div>
+
+                    <button id="add-to-cart-btn-custom" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-semibold transition duration-200 shadow-md hover:scale-105 w-full mb-6">
+                        Tambahkan ke Keranjang (Kustom)
+                    </button>
+                </div>
             </section>
 
             <!-- Keranjang Belanja Section -->
@@ -743,11 +817,7 @@
 
             // Elemen aplikasi yang sudah ada
             const currentDateSpan = document.getElementById('current-date');
-            const productCodeInput = document.getElementById('product-code');
-            const productNameInput = document.getElementById('product-name');
-            const priceInput = document.getElementById('price');
-            const quantityInput = document.getElementById('quantity');
-            const addProductToCartBtn = document.getElementById('add-to-cart-btn');
+            const addProductToCartBtn = document.getElementById('add-to-cart-btn-registered'); // Diperbarui untuk produk terdaftar
             const processPaymentBtn = document.getElementById('process-payment-btn');
             const clearCartBtn = document.getElementById('clear-cart-btn');
             const paymentModal = document.getElementById('payment-modal');
@@ -828,7 +898,6 @@
 
             // === Elemen Modal Edit Produk ===
             const editProductModal = document.getElementById('edit-product-modal');
-            // FIX: Removed 'document =' as it was causing a TypeError
             const closeEditProductModalBtn = document.getElementById('close-edit-product-modal-btn');
             const editProductCodeInput = document.getElementById('edit-product-code');
             const editProductNameInput = document.getElementById('edit-product-name');
@@ -916,6 +985,27 @@
             const confirmNoBtn = document.getElementById('confirm-no-btn');
             let confirmCallback = null; // Untuk menyimpan fungsi callback untuk konfirmasi
 
+            // === UI Elements for Product Input Tabs ===
+            const tabRegisteredProductBtn = document.getElementById('tab-registered-product');
+            const tabCustomProductBtn = document.getElementById('tab-custom-product');
+            const registeredProductInputArea = document.getElementById('registered-product-input-area');
+            const customProductInputArea = document.getElementById('custom-product-input-area');
+
+            // Registered Product Inputs
+            const productCodeInput = document.getElementById('product-code');
+            const productNameInput = document.getElementById('product-name');
+            const priceInput = document.getElementById('price');
+            const quantityInput = document.getElementById('quantity');
+            const addToCartRegisteredBtn = document.getElementById('add-to-cart-btn-registered');
+
+            // Custom Product Inputs
+            const customProductCodeInput = document.getElementById('custom-product-code');
+            const customProductNameInput = document.getElementById('custom-product-name');
+            const customPriceInput = document.getElementById('custom-price');
+            const customQuantityInput = document.getElementById('custom-quantity');
+            const addToCartCustomBtn = document.getElementById('add-to-cart-btn-custom');
+
+
             // --- Manajemen Status UI ---
             function showLoginScreen() {
                 loginScreen.classList.remove('hidden');
@@ -951,6 +1041,45 @@
                 updateTodaySalesDisplay();
                 updateCurrentDate(); // Panggil untuk memperbarui tanggal
                 renderCart(); // Render keranjang saat aplikasi utama ditampilkan
+                showRegisteredProductTab(); // Tampilkan tab produk terdaftar secara default
+            }
+
+            // Function to switch between product input tabs
+            function switchProductInputTab(tabType) {
+                if (tabType === 'registered') {
+                    tabRegisteredProductBtn.classList.add('active-cashier');
+                    tabRegisteredProductBtn.classList.remove('inactive-cashier');
+                    tabCustomProductBtn.classList.add('inactive-custom-cashier');
+                    tabCustomProductBtn.classList.remove('active-custom-cashier');
+                    registeredProductInputArea.classList.remove('hidden');
+                    customProductInputArea.classList.add('hidden');
+
+                    // Clear custom product inputs when switching to registered
+                    customProductCodeInput.value = '';
+                    customProductNameInput.value = '';
+                    customPriceInput.value = '0';
+                    customQuantityInput.value = '1';
+                } else if (tabType === 'custom') {
+                    tabCustomProductBtn.classList.add('active-custom-cashier');
+                    tabCustomProductBtn.classList.remove('inactive-custom-cashier');
+                    tabRegisteredProductBtn.classList.add('inactive-cashier');
+                    tabRegisteredProductBtn.classList.remove('active-cashier');
+                    customProductInputArea.classList.remove('hidden');
+                    registeredProductInputArea.classList.add('hidden');
+
+                    // Clear registered product inputs when switching to custom
+                    productCodeInput.value = '';
+                    productNameInput.value = '';
+                    priceInput.value = '0';
+                    quantityInput.value = '1';
+                }
+                // Clear the main message box when switching tabs
+                messageBox.classList.add('hidden');
+            }
+
+            // Initial call to show registered product tab
+            function showRegisteredProductTab() {
+                switchProductInputTab('registered');
             }
 
             function showMessage(message, type = 'info') {
@@ -1943,7 +2072,9 @@
                     totalRevenue += trans.total;
                     // Hitung HPP untuk setiap item dalam transaksi
                     trans.items.forEach(item => {
-                        // Pastikan item memiliki costPrice, jika tidak, anggap 0 untuk menghindari NaN
+                        // Pastikan item memiliki costPrice. Untuk produk kustom, costPrice sudah dihitung saat ditambahkan ke keranjang.
+                        // Untuk produk terdaftar, costPrice diambil dari `products` atau 0 jika tidak ada.
+                        // Di sini, kita asumsikan item.costPrice sudah benar.
                         totalCostOfGoodsSold += (item.costPrice || 0) * item.quantity;
                     });
                 });
@@ -2202,21 +2333,26 @@
                 const change = parseInt(event.target.dataset.change);
 
                 if (cart[index]) {
-                    const currentProduct = products[cart[index].id];
-                    // Mencegah penambahan lebih dari stok yang tersedia untuk produk toko
-                    if (currentProduct && (cart[index].quantity + change) > currentProduct.stock) {
-                        showMessage(`Stok ${currentProduct.name} hanya ${currentProduct.stock}.`, 'error');
-                        return;
+                    // Check if it's a registered product to enforce stock limits
+                    const isRegisteredProduct = !cart[index].id.startsWith('CUSTOM_');
+                    const currentProductInStore = isRegisteredProduct ? products[cart[index].id] : null;
+
+                    if (isRegisteredProduct && currentProductInStore) {
+                        // Prevent adding more than available stock for registered products
+                        if ((cart[index].quantity + change) > currentProductInStore.stock) {
+                            showMessage(`Stok ${currentProductInStore.name} hanya ${currentProductInStore.stock}.`, 'error');
+                            return;
+                        }
                     }
-                    // Mencegah kuantitas turun di bawah nol
+
+                    // Prevent quantity from going below one (if decrementing, remove if becomes 0)
                     if (cart[index].quantity + change < 1 && change === -1) {
-                         // Jika mencoba mengurangi menjadi 0 atau kurang, hapus saja
-                         cart.splice(index, 1);
+                         cart.splice(index, 1); // If trying to reduce to 0 or less, just remove it
                     } else {
                         cart[index].quantity += change;
                     }
 
-                    // Jika kuantitas menjadi 0 atau kurang, hapus item dari keranjang
+                    // If quantity becomes 0 or less, remove item from cart
                     if (cart[index] && cart[index].quantity <= 0) {
                         cart.splice(index, 1);
                     }
@@ -2234,71 +2370,87 @@
             }
 
             // Logika tambah produk ke keranjang (dari bidang input produk)
-            function addProductToCart(productData, quantityToAdd) {
-                console.log("addProductToCart dipanggil dengan:", productData, "Kuantitas:", quantityToAdd);
-
-                const productCode = productData.id; // Menggunakan ID produk dari productData
-                const productName = productData.name;
-                const price = productData.price;
-                const quantity = quantityToAdd; // Menggunakan kuantitas yang diteruskan
+            function addProductToCart(productCode, productName, price, quantity, isCustom = false) {
+                console.log("addProductToCart dipanggil dengan:", productCode, productName, price, quantity, "Kustom:", isCustom);
 
                 if (!productName || isNaN(price) || price < 0 || isNaN(quantity) || quantity <= 0) {
                     showMessage('Harap masukkan Nama Produk, Harga, dan Kuantitas yang valid.', 'error');
                     return;
                 }
 
-                let productToAdd = { ...productData }; // Salin data produk yang diteruskan
+                let productData = {
+                    id: productCode || (isCustom ? 'CUSTOM_' + Date.now() : 'UNKNOWN_' + Date.now()), // Ensure unique ID for custom products
+                    name: productName,
+                    price: price,
+                    quantity: quantity
+                };
 
-                // Periksa apakah ini produk kustom (tidak memiliki kode produk atau kode tidak ditemukan di produk toko)
-                let isCustomProduct = !productCode || !products[productCode];
-                if (isCustomProduct) {
-                    productToAdd.id = 'CUSTOM_' + Date.now(); // ID unik untuk produk kustom
-                    productToAdd.costPrice = productData.costPrice || (price * 0.8); // Asumsikan 80% biaya untuk 20% margin
-                    productToAdd.stock = 999999999; // Stok tidak terbatas untuk produk kustom
+                // Determine costPrice based on product type
+                if (isCustom) {
+                    // For custom products, cost is 80% of selling price (20% margin)
+                    productData.costPrice = price * 0.8;
+                    productData.type = 'custom';
                 } else {
-                    // Ini adalah produk yang terdaftar, gunakan biaya dari produk toko
-                    productToAdd.costPrice = products[productCode].cost || 0;
+                    // For registered products, fetch cost from `products` object
+                    const registeredProduct = products[productCode];
+                    if (registeredProduct) {
+                        productData.costPrice = registeredProduct.cost;
+                        productData.type = 'registered';
 
-                    // Periksa stok untuk produk terdaftar sebelum menambahkan ke keranjang
-                    if (products[productCode].stock <= 0) {
-                        showMessage('Habis Boss', 'error');
-                        // Clear inputs when out of stock
-                        productCodeInput.value = '';
-                        productNameInput.value = '';
-                        priceInput.value = '0';
-                        quantityInput.value = '1';
-                        return; // Jangan tambahkan ke keranjang
-                    }
-                    if (products[productCode].stock < quantity) {
-                        showMessage(`Stok ${productName} hanya ${products[productCode].stock}.`, 'error');
-                        return; // Jangan tambahkan ke keranjang jika kuantitas melebihi stok awal
+                        // Check stock for registered product before adding to cart
+                        if (registeredProduct.stock <= 0) {
+                            showMessage('Stok Habis!', 'error');
+                            // Clear inputs when out of stock
+                            productCodeInput.value = '';
+                            productNameInput.value = '';
+                            priceInput.value = '0';
+                            quantityInput.value = '1';
+                            return; // Don't add to cart
+                        }
+                        if (registeredProduct.stock < quantity) {
+                            showMessage(`Stok ${productName} hanya ${registeredProduct.stock}.`, 'error');
+                            return; // Don't add to cart if quantity exceeds initial stock
+                        }
+                    } else {
+                        // This should not happen if logic for registered product is correct, but as a fallback
+                        productData.costPrice = price; // Assume no profit if cost not found
+                        productData.type = 'registered_fallback'; // Mark as fallback type
                     }
                 }
 
-                const existingItemIndex = cart.findIndex(item => item.id === productToAdd.id);
+                const existingItemIndex = cart.findIndex(item => item.id === productData.id);
 
                 if (existingItemIndex > -1) {
                     const newQuantity = cart[existingItemIndex].quantity + quantity;
-                    // Periksa total kuantitas terhadap stok untuk produk toko
-                    if (!isCustomProduct && newQuantity > products[productToAdd.id].stock) {
-                         showMessage(`Penambahan akan melebihi stok. Stok tersedia: ${products[productToAdd.id].stock}. Sudah ada di keranjang: ${cart[existingItemIndex].quantity}.`, 'error');
+                    // Re-check stock for registered products if updating quantity
+                    if (!isCustom && products[productData.id] && newQuantity > products[productData.id].stock) {
+                         showMessage(`Penambahan akan melebihi stok. Stok tersedia: ${products[productData.id].stock}. Sudah ada di keranjang: ${cart[existingItemIndex].quantity}.`, 'error');
                          return;
                     }
                     cart[existingItemIndex].quantity = newQuantity;
                 } else {
-                    cart.push({ ...productToAdd, quantity: quantity });
+                    cart.push(productData);
                 }
 
-                productCodeInput.value = ''; // Bersihkan input kode produk
-                productNameInput.value = ''; // Bersihkan input nama produk
-                priceInput.value = '0'; // Reset harga
-                quantityInput.value = '1'; // Reset kuantitas
+                // Clear inputs based on active tab
+                if (isCustom) {
+                    customProductCodeInput.value = '';
+                    customProductNameInput.value = '';
+                    customPriceInput.value = '0';
+                    customQuantityInput.value = '1';
+                } else {
+                    productCodeInput.value = '';
+                    productNameInput.value = '';
+                    priceInput.value = '0';
+                    quantityInput.value = '1';
+                }
 
-                showMessage(`Produk "${productToAdd.name}" ditambahkan ke keranjang.`, 'success');
+
+                showMessage(`Produk "${productName}" ditambahkan ke keranjang.`, 'success');
                 renderCart(); // Render ulang keranjang
             }
 
-            // Penanganan Input Otomatis (Debounced)
+            // Penanganan Input Otomatis (Debounced) untuk Produk Terdaftar
             let productCodeInputTimeout = null;
             productCodeInput.addEventListener('input', function() {
                 clearTimeout(productCodeInputTimeout); // Hapus timeout sebelumnya
@@ -2314,79 +2466,103 @@
 
                     // Periksa stok untuk auto-add
                     if (product.stock <= 0) {
-                        showMessage('Habis Boss', 'error');
+                        showMessage('Stok Habis!', 'error');
                         productCodeInput.value = ''; // Bersihkan input jika habis
                         productNameInput.value = '';
                         priceInput.value = '0';
                         quantityInput.value = '1';
                         return; // Hentikan proses auto-add
                     }
-                    // Jika stok tersedia, set timeout untuk auto-add
+                    // If stock is available, set timeout for auto-add
                     productCodeInputTimeout = setTimeout(() => {
                         console.log("Debounced: Mencoba menambahkan produk terdaftar secara otomatis:", code);
-                        // Pastikan stok masih cukup saat penambahan otomatis
+                        // Ensure stock is still sufficient at time of auto-add
                         if (product.stock > 0) { // Double check here
-                            addProductToCart(product, parseInt(quantityInput.value) || 1);
+                            addProductToCart(code, product.name, product.price, parseInt(quantityInput.value) || 1, false);
                         } else {
-                            showMessage('Habis Boss', 'error');
+                            showMessage('Stok Habis!', 'error');
                             productCodeInput.value = '';
                             productNameInput.value = '';
                             priceInput.value = '0';
                             quantityInput.value = '1';
                         }
-                    }, 300); // Tunggu 300ms setelah input berhenti
+                    }, 300); // Wait 300ms after input stops
 
                 } else {
-                    // Jika kode produk tidak cocok, kosongkan bidang nama dan harga
-                    // Tapi jangan kosongkan jika pengguna sedang mengetik produk kustom tanpa kode
-                    if (!productNameInput.value.trim() || !parseFloat(priceInput.value) || code === '') {
-                        productNameInput.value = '';
-                        priceInput.value = '0';
-                    }
+                    // If product code does not match, clear name and price fields
+                    // But don't clear if user is typing a custom product without a code
+                    productNameInput.value = '';
+                    priceInput.value = '0';
                 }
             });
 
-            // Tambahkan event listener untuk tombol "Tambahkan ke Keranjang"
-            addProductToCartBtn.addEventListener('click', () => {
+            // Add event listener for "Tambahkan ke Keranjang" (Registered Product)
+            addToCartRegisteredBtn.addEventListener('click', () => {
                 const productCode = productCodeInput.value.trim().toUpperCase();
                 const productName = productNameInput.value.trim();
                 const price = parseFloat(priceInput.value);
-                const quantity = parseInt(quantityInput.value) || 1; // Default ke 1 jika tidak disetel atau tidak valid
+                const quantity = parseInt(quantityInput.value) || 1; // Default to 1 if not set or invalid
 
-                let productData;
-                if (productCode && products[productCode]) {
-                    productData = products[productCode];
-                    productData.id = productCode; // Tambahkan ID untuk konsistensi
-
-                    // Periksa stok saat klik manual "Tambahkan ke Keranjang"
-                    if (productData.stock <= 0) {
-                        showMessage('Habis Boss', 'error');
-                        return;
-                    }
-                    if (productData.stock < quantity) {
-                        showMessage(`Stok ${productName} hanya ${productData.stock}.`, 'error');
-                        return;
-                    }
-
-                } else if (productName && !isNaN(price) && price >= 0) {
-                    productData = {
-                        id: 'CUSTOM_' + Date.now(),
-                        name: productName,
-                        price: price,
-                        costPrice: price * 0.8 // Asumsi biaya untuk produk kustom
-                    };
-                } else {
-                    showMessage('Harap masukkan Nama Produk, Harga, dan Kuantitas yang valid.', 'error');
+                // Validate inputs for registered product
+                if (!productCode || !products[productCode]) {
+                    showMessage('Pilih produk terdaftar yang valid menggunakan kode produk.', 'error');
                     return;
                 }
-                addProductToCart(productData, quantity);
+                const productData = products[productCode];
+                if (productData.stock <= 0) {
+                    showMessage('Stok Habis!', 'error');
+                    return;
+                }
+                if (productData.stock < quantity) {
+                    showMessage(`Stok ${productName} hanya ${productData.stock}.`, 'error');
+                    return;
+                }
+
+                addProductToCart(productCode, productData.name, productData.price, quantity, false);
             });
+
+            // Add event listener for "Tambahkan ke Keranjang" (Custom Product)
+            addToCartCustomBtn.addEventListener('click', () => {
+                const customCode = customProductCodeInput.value.trim().toUpperCase();
+                const customName = customProductNameInput.value.trim();
+                const customPrice = parseFloat(customPriceInput.value);
+                const customQuantity = parseInt(customQuantityInput.value) || 1;
+
+                // Validate inputs for custom product
+                if (!customName) {
+                    showMessage('Nama Produk Kustom wajib diisi.', 'error');
+                    return;
+                }
+                if (isNaN(customPrice) || customPrice <= 0) {
+                    showMessage('Harga Jual Kustom wajib diisi dan harus angka positif.', 'error');
+                    return;
+                }
+                if (isNaN(customQuantity) || customQuantity <= 0) {
+                    showMessage('Jumlah wajib diisi dan harus angka positif.', 'error');
+                    return;
+                }
+
+                // Check if custom product code clashes with any registered product code
+                if (customCode && products[customCode]) {
+                    showMessage('Kode Produk Kustom tidak boleh sama dengan produk terdaftar!', 'error');
+                    return;
+                }
+
+                addProductToCart(customCode || 'CUSTOM_' + Date.now(), customName, customPrice, customQuantity, true);
+            });
+
 
             // Tambahkan event listener untuk Enter pada input quantity agar bisa menambah ke keranjang
             quantityInput.addEventListener('keypress', function(event) {
                 if (event.key === 'Enter') {
                     event.preventDefault(); // Mencegah form submit default
-                    addProductToCartBtn.click(); // Panggil fungsi klik tombol
+                    addToCartRegisteredBtn.click(); // Panggil fungsi klik tombol produk terdaftar
+                }
+            });
+            customQuantityInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Mencegah form submit default
+                    addToCartCustomBtn.click(); // Panggil fungsi klik tombol produk kustom
                 }
             });
 
@@ -2416,61 +2592,54 @@
                     return;
                 }
 
-                // Kurangi stok untuk setiap item di keranjang
+                // Decrease stock for each item in the cart if it's a registered product
                 const itemsToProcess = [];
                 for (const item of cart) {
-                    let costPrice = item.costPrice; // Ambil costPrice yang sudah dihitung saat penambahan keranjang
-                    // Fallback safety: jika entah bagaimana costPrice hilang, hitung ulang
-                    if (typeof costPrice === 'undefined' || costPrice === null) {
-                        if (item.id.startsWith('CUSTOM_')) {
-                            costPrice = item.price * 0.80;
-                        } else {
-                            const productInDb = products[item.id];
-                            costPrice = productInDb ? productInDb.cost : item.price; // Jika tidak ada biaya di DB, asumsikan biaya = harga (laba 0)
-                        }
-                    }
+                    let costPrice = item.costPrice; // Use the costPrice already determined when adding to cart
 
-                    // Untuk produk toko, perbarui stok
-                    if (products[item.id]) {
-                        if (products[item.id].stock < item.quantity) {
-                            // Pemeriksaan ini idealnya harus terjadi SEBELUM masuk modal pembayaran
-                            // tetapi sebagai pengaman, ini ada di sini juga.
-                            showMessage(`Stok tidak cukup untuk produk "${item.name}". Stok tersedia: ${products[item.id].stock}`, 'error');
-                            return; // Hentikan transaksi jika stok tidak cukup
+                    // For registered products, update stock
+                    if (!item.id.startsWith('CUSTOM_')) { // Only deduct stock for registered products
+                        if (products[item.id]) {
+                            if (products[item.id].stock < item.quantity) {
+                                // This check should ideally happen BEFORE entering the payment modal
+                                // but as a safeguard, it's here too.
+                                showMessage(`Stok tidak cukup untuk produk "${item.name}". Stok tersedia: ${products[item.id].stock}`, 'error');
+                                return; // Stop transaction if stock is insufficient
+                            }
+                            products[item.id].stock -= item.quantity;
                         }
-                        products[item.id].stock -= item.quantity;
                     }
                     itemsToProcess.push({ ...item, costPrice: costPrice });
                 }
 
-                // Simpan stok produk yang diperbarui ke localStorage
+                // Save updated product stock to localStorage
                 localStorage.setItem('products', JSON.stringify(products));
 
                 const transaction = {
-                    id: 'TRX-' + Date.now(), // Hasilkan ID lokal untuk offline
+                    id: 'TRX-' + Date.now(), // Generate local ID for offline
                     dateDisplay: new Date().toLocaleString('id-ID', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
-                    dateForComparison: new Date().toISOString().slice(0, 10), // Formatablanca-MM-DD untuk perbandingan mudah
+                    dateForComparison: new Date().toISOString().slice(0, 10), // Formatablanca-MM-DD format for easy comparison
                     total: grandTotal,
                     subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
                     discount: parseFloat(discountInput.value) || 0,
                     paymentMethod: selectedPaymentMethod,
                     amountReceived: amountReceived,
                     change: amountReceived - grandTotal,
-                    items: JSON.parse(JSON.stringify(itemsToProcess)), // Gunakan item dengan costPrice yang dihitung
+                    items: JSON.parse(JSON.stringify(itemsToProcess)), // Use items with calculated costPrice
                     cashierId: loggedInUser ? loggedInUser.id : 'anonymous',
                     cashierUsername: loggedInUser ? loggedInUser.username : 'Anonim'
                 };
 
                 transactionsHistory.push(transaction);
-                localStorage.setItem('transactionsHistory', JSON.stringify(transactionsHistory)); // Simpan ke localStorage
+                localStorage.setItem('transactionsHistory', JSON.stringify(transactionsHistory)); // Save to localStorage
 
                 showMessage('Transaksi berhasil diproses!', 'success');
                 console.log('Transaksi diproses:', transaction);
                 clearCart();
                 amountReceivedInput.value = '';
                 changeSpan.textContent = formatCurrency(0);
-                updateTodaySalesDisplay(); // Perbarui penjualan di layar utama
-                hidePaymentModal(); // Tutup modal pembayaran setelah transaksi berhasil
+                updateTodaySalesDisplay(); // Update sales on main screen
+                hidePaymentModal(); // Close payment modal after successful transaction
             }
 
             function renderTransactionHistory(filterDate = null) {
@@ -2517,11 +2686,27 @@
             async function deleteTransaction(event) {
                 const transactionIdToDelete = String(event.target.dataset.id);
                 showConfirmModal(`Apakah Anda yakin ingin menghapus transaksi dengan ID ${transactionIdToDelete}?`, async () => {
+                    const transactionToDelete = transactionsHistory.find(trans => trans.id === transactionIdToDelete);
+
+                    if (transactionToDelete) {
+                        // Mengembalikan stok produk yang terdaftar
+                        transactionToDelete.items.forEach(item => {
+                            // Hanya kembalikan stok jika itu produk terdaftar (bukan kustom)
+                            if (products[item.id] && !item.id.startsWith('CUSTOM_')) {
+                                products[item.id].stock += item.quantity;
+                                console.log(`Stok produk "${item.name}" (kode: ${item.id}) dikembalikan sebanyak ${item.quantity}. Stok baru: ${products[item.id].stock}`);
+                            }
+                        });
+                        // Simpan kembali produk yang diperbarui ke localStorage
+                        localStorage.setItem('products', JSON.stringify(products));
+                    }
+
                     transactionsHistory = transactionsHistory.filter(trans => trans.id !== transactionIdToDelete);
                     localStorage.setItem('transactionsHistory', JSON.stringify(transactionsHistory)); // Simpan ke localStorage
-                    showMessage(`Transaksi ${transactionIdToDelete} telah dihapus.`, 'info');
+                    showMessage(`Transaksi ${transactionIdToDelete} telah dihapus. Stok produk yang relevan telah dikembalikan.`, 'info');
                     renderTransactionHistory(transactionDateFilterInput.value || null); // Render ulang riwayat
                     updateTodaySalesDisplay(); // Perbarui penjualan
+                    renderStoreProductsList(); // Perbarui tampilan daftar produk toko untuk menunjukkan stok yang diperbarui
                 });
             }
 
@@ -2539,7 +2724,7 @@
                             return;
                         }
                     }
-                    // Hanya tambahkan penjualan jika tanggal transaksi cocok dengan tanggal hari ini
+                    // Only add sales if transaction date matches today's date
                     if (transactionDateForComparison === todayFormatted) {
                         totalSalesToday += transaction.total;
                     }
@@ -2786,6 +2971,10 @@
             }
 
             resetAllDataBtn.addEventListener('click', resetAllApplicationData);
+
+            // Event Listeners for Product Input Tabs
+            tabRegisteredProductBtn.addEventListener('click', () => switchProductInputTab('registered'));
+            tabCustomProductBtn.addEventListener('click', () => switchProductInputTab('custom'));
 
             // Status awal: tampilkan layar login
             showLoginScreen();
